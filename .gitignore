@@ -41,6 +41,8 @@ nb-configuration.xml
 application-dev.properties
 .quinoa
 StartupUser.java
+/**/**/import.sql
+/**/**/.svelte-kit
 
 # Plugin directory
 /.quarkus/cli/plugins/
