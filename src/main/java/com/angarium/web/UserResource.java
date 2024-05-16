@@ -13,8 +13,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Path("/api/user")
 public class UserResource {
+
     private final UserService userService;
 
+    /**
+     * GET-Ressource, die das aktuelle angemeldete Benutzermodell zurückgibt.
+     *
+     * @param securityContext Der Sicherheitskontext, der Informationen über den aktuellen Benutzer enthält.
+     * @return Das UserModel des aktuell angemeldeten Benutzers.
+     */
     @GET
     @Path("/whoami")
     @RunOnVirtualThread
