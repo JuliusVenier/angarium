@@ -41,6 +41,7 @@ nb-configuration.xml
 application-dev.properties
 .quinoa
 StartupUser.java
+import.sql
 
 # Plugin directory
 /.quarkus/cli/plugins/
