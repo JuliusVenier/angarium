@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
  * Diese Klasse repräsentiert einen neuen Benutzer im System.
  *
  */
-@RequiredArgsConstructor
 @Data
+@RequiredArgsConstructor
 public class NewUserModel {
 
     /**

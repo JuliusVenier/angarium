@@ -1,14 +1,13 @@
 package com.angarium.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 /**
  * Diese Klasse repräsentiert einen Benutzer im System.
  */
-@RequiredArgsConstructor
 @Data
+@RequiredArgsConstructor
 public class UserModel {
 
     /**
@@ -26,3 +25,4 @@ public class UserModel {
      */
     private final String role;
 }
+
