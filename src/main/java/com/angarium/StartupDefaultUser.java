@@ -46,6 +46,6 @@ public class StartupDefaultUser {
      */
     private void createAdminUser() {
         log.info("Creating Default User");
-        userService.createUser(new NewUserModel(defaultName, defaultPassword, "admin"));
+        userService.createUser(new NewUserModel(defaultName, defaultPassword, "user"));
     }
 }
