@@ -6,26 +6,31 @@ import io.quarkus.security.jpa.Roles;
 import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
+
+import java.util.Objects;
 
 /**
  * Diese Klasse repräsentiert einen Benutzer in der Anwendung.
  * Sie wird mit JPA persistiert und verwendet, um Benutzer in der Datenbank zu speichern und abzurufen.
  *
  */
-@Data
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Table(name = "angarium_user")
+@Entity
 @UserDefinition
+@NoArgsConstructor
 public class UserEntity extends PanacheEntity{
 
     /**
      * Eindeutiger Benutzername des Benutzers.
      */
-    @NonNull
     @Column(unique = true, nullable = false)
     @Username
     private String username;
@@ -33,7 +38,6 @@ public class UserEntity extends PanacheEntity{
     /**
      * Passwort des Benutzers. (Wird in der Regel verschlüsselt gespeichert)
      */
-    @NonNull
     @Column(nullable = false)
     @Password
     private String password;
@@ -41,7 +45,6 @@ public class UserEntity extends PanacheEntity{
     /**
      * Rolle des Benutzers.
      */
-    @NonNull
     @Roles
     @Column(nullable = false)
     private String role;

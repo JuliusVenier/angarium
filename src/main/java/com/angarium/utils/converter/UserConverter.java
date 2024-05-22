@@ -15,7 +15,7 @@ public class UserConverter {
      */
     public static UserModel toUserModel(@NonNull UserEntity user) {
 
-        return new UserModel(user.id, user.getUsername(), user.getPassword());
+        return new UserModel(user.id, user.getUsername(), user.getRole());
     }
 
     /**

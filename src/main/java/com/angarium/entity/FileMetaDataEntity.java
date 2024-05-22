@@ -1,12 +1,11 @@
 package com.angarium.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -14,7 +13,9 @@ import java.util.UUID;
  * Sie wird mit JPA persistiert und verwendet, um die Metadaten einer Datei in der Datenbank zu speichern und abzurufen.
  *
  */
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -58,4 +59,16 @@ public class FileMetaDataEntity {
      */
     @Column(name = "deletion-date", nullable = false, updatable = false)
     private LocalDate deletionDate;
+
+    /**
+     * TODO
+     */
+    private String sha256;
+
+    /**
+     * Der User der die Datei hochgeladen hat
+     */
+    @ManyToOne
+    @JoinColumn(name = "angarium_user", nullable = false)
+    private UserEntity userEntity;
 }
