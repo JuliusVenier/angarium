@@ -1,5 +1,8 @@
 package com.angarium.model;
 
+import com.angarium.entity.UserEntity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -42,4 +45,13 @@ public class FileMetaDataModel {
      * Zeitpunkt der Löschung der Datei
      */
     private final LocalDate deletionDate;
+
+    /**
+     * TODO
+     */
+    private final String sha256;
+    /**
+     * Der User der die Datei hochgeladen hat
+     */
+    private final UserModel userModel;
 }
