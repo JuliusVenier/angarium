@@ -24,25 +24,25 @@
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         })
-            .then((response) => {
-                if (response.status === 200) {
-                    // Authentication was successful
-                    console.log("Authentication successful");
-                    loginSuccess = true;
-                    setTimeout("5000");
-                    location.reload();
-                } else {
-                    // Authentication failed
-                    console.error("Invalid credentials");
-                    loginSuccess = false;
-                    errorMessage = "Username oder Passwort sind falsch";
-                }
-            })
-            .catch((error) => {
+        .then((response) => {
+            if (response.status === 200) {
+                // Authentication was successful
+                console.log("Authentication successful");
+                loginSuccess = true;
+                setTimeout("5000");
+                location.reload();
+            } else {
+                // Authentication failed
+                console.error("Invalid credentials");
                 loginSuccess = false;
-                console.log(error);
-                errorMessage = "Ein Fehler ist aufgetretten";
-            });
+                errorMessage = "Username oder Passwort sind falsch";
+            }
+        })
+        .catch((error) => {
+            loginSuccess = false;
+            console.error(error);
+            errorMessage = "Ein Fehler ist aufgetretten";
+        });
     }
 
 </script>
