@@ -4,9 +4,12 @@ import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.entity.UserEntity;
 import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileMetaDataConverter {
 
     /**

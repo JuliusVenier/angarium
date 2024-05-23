@@ -1,8 +1,5 @@
 package com.angarium.model;
 
-import com.angarium.entity.UserEntity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 

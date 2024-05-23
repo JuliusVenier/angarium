@@ -2,10 +2,8 @@ package com.angarium.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.UUID;
 
 /**

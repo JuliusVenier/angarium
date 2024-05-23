@@ -11,8 +11,6 @@ import lombok.extern.jbosslog.JBossLog;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 @Path("/api/upload")
 @JBossLog

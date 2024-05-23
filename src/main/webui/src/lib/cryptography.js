@@ -50,7 +50,7 @@ export function hashFile(file) {
     return new Promise((resolve, reject) => {
         convertFileToArrayBuffer(file, (e) => {
             try {
-                var data = e.target.result;
+                const data = e.target.result;
                 if (data === null || data === undefined || data.byteLength === 0) {
                     throw new Error("invalid data");
                 }

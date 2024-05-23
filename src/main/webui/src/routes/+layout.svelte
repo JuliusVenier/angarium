@@ -49,7 +49,7 @@
 <script>
     import "../app.css";
     import Login from '../components/+login.svelte';
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
 
     let authenticated = false;
     onMount(() => {

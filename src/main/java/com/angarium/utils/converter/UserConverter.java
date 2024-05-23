@@ -3,8 +3,11 @@ package com.angarium.utils.converter;
 import com.angarium.entity.UserEntity;
 import com.angarium.model.NewUserModel;
 import com.angarium.model.UserModel;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserConverter {
 
     /**

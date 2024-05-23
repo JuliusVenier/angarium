@@ -17,9 +17,8 @@
 
 </style>
 <script>
-    import { onMount } from "svelte";
-    import { hashFile } from "$lib/cryptography.js";
-    import { encryptFile } from "$lib/cryptography.js";
+    import {onMount} from "svelte";
+    import {encryptFile, hashFile} from "$lib/cryptography.js";
 
     const fileID = "file";
     const nameID = "name";
