@@ -23,7 +23,7 @@ public class StartupDefaultUser {
     private final UserService userService;
 
     /**
-     * Initialisiert den Deafult-Benutzer beim Systemstart.
+     * Initialisiert den Default-Benutzer beim Systemstart.
      *
      *
      * @param evt StartupEvent-Objekt, das den Systemstart signalisiert.

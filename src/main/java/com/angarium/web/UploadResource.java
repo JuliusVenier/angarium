@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -23,7 +24,7 @@ public class UploadResource {
     @PUT
     @Path("/{name}")
     @RunOnVirtualThread
-    public void upload(@BeanParam NewFileMetaDataModel newFileMetaDataModel, File file){
+    public void upload(@BeanParam NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
         fileService.upload(newFileMetaDataModel, file);
 
     }

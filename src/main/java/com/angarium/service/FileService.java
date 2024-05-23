@@ -12,8 +12,13 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -22,15 +27,24 @@ public class FileService {
     private final FileMetaDataRepository fileMetaDataRepository;
     private final UserRepository userRepository;
 
+    @ConfigProperty(name = "anagarium.config.dir")
+    String fileDir;
+
     @Context
     SecurityContext securityContext;
 
     @Transactional
-    public void upload(NewFileMetaDataModel newFileMetaDataModel, File file) {
+    public void upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
         UserEntity userEntity =  userRepository.findUserByUsername("default"); //securityContext.getUserPrincipal().getName());
         FileMetaDataEntity fileMetaDataEntity = FileMetaDataConverter.toFileMetaDataEntity(newFileMetaDataModel, userEntity);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 
+        moveFile(file, fileMetaDataEntity.getId().toString());
+    }
 
+    private void moveFile(File file, String fileId) throws IOException {
+        Path target = Paths.get(fileDir, fileId);
+        Files.createDirectories(target.getParent());
+        Files.move(file.toPath(), target);
     }
 }
