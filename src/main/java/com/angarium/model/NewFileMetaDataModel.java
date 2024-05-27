@@ -1,6 +1,8 @@
 package com.angarium.model;
 
+import jakarta.ws.rs.DefaultValue;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jboss.resteasy.reactive.RestHeader;
@@ -24,13 +26,13 @@ public class NewFileMetaDataModel {
      * Die maximale Anzahl der Downloads
      */
     @RestHeader("max-downloads")
-    int maxDownloads;
+    Integer maxDownloads;
 
     /**
      * Maximale Anzahl von Tagen bis zur Löschung
      */
     @RestHeader("max-days")
-    int maxDays;
+    Integer maxDays;
 
     /**
      * TODO

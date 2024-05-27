@@ -4,13 +4,22 @@ import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.entity.UserEntity;
 import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
+import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ApplicationScoped
+@RequiredArgsConstructor
 public class FileMetaDataConverter {
+    private final UserConverter userConverter;
+
+    @ConfigProperty(name = "angarium.config.max-days")
+    int maxDays;
 
     /**
      * Konvertiert ein 'NewFileMetaDataModel'-Objekt in ein 'FileMetaDataEntity'-Objekt.
@@ -27,16 +36,24 @@ public class FileMetaDataConverter {
      *
      * @return Ein neues 'FileMetaDataEntity'-Objekt mit den konvertierten Daten.
      */
-    public static FileMetaDataEntity toFileMetaDataEntity(NewFileMetaDataModel newFileMetaDataModel, UserEntity userEntity) {
+    public FileMetaDataEntity toFileMetaDataEntity(NewFileMetaDataModel newFileMetaDataModel, UserEntity userEntity) {
 
         return FileMetaDataEntity.builder()
                 .name(newFileMetaDataModel.getName())
                 .maxDownloads(newFileMetaDataModel.getMaxDownloads())
                 .creationDate(LocalDate.now())
-                .deletionDate(LocalDate.now().plusDays(newFileMetaDataModel.getMaxDays()))
+                .deletionDate(LocalDate.now().plusDays(calcMaxDays(newFileMetaDataModel)))
                 .sha256(newFileMetaDataModel.getSha256())
                 .userEntity(userEntity)
                 .build();
+    }
+
+    private int calcMaxDays(NewFileMetaDataModel newFileMetaDataModel){
+        if (newFileMetaDataModel.getMaxDays() == null){
+            return maxDays;
+        }
+
+        return newFileMetaDataModel.getMaxDays();
     }
 
     /**
@@ -46,7 +63,7 @@ public class FileMetaDataConverter {
      *
      * @return Ein neues 'FileMetaDataModel'-Objekt mit den konvertierten Daten.
      */
-    public static FileMetaDataModel toFileMetaDataModel(FileMetaDataEntity fileMetaDataEntity) {
+    public FileMetaDataModel toFileMetaDataModel(FileMetaDataEntity fileMetaDataEntity) {
         return new FileMetaDataModel(
                 fileMetaDataEntity.getId(),
                 fileMetaDataEntity.getName(),
@@ -55,7 +72,7 @@ public class FileMetaDataConverter {
                 fileMetaDataEntity.getCreationDate(),
                 fileMetaDataEntity.getDeletionDate(),
                 fileMetaDataEntity.getSha256(),
-                UserConverter.toUserModel(fileMetaDataEntity.getUserEntity())
+                userConverter.toUserModel(fileMetaDataEntity.getUserEntity())
         );
     }
 }

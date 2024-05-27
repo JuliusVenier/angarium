@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserConverter userConverter;
 
     /**
      * Erstellt einen neuen Benutzer.
@@ -26,7 +27,7 @@ public class UserService {
             throw new IllegalArgumentException("A User with the username: " + newUser.getUsername() + " already exists");
         }
 
-        UserEntity user = UserConverter.toUserEntity(newUser);
+        UserEntity user = userConverter.toUserEntity(newUser);
         userRepository.persist(user);
     }
 
@@ -38,7 +39,7 @@ public class UserService {
      *         oder null, wenn kein Benutzer mit dem angegebenen Benutzernamen gefunden wurde.
      */
     public UserModel findByUsername(String username) {
-        return UserConverter.toUserModel(userRepository.findUserByUsername(username));
+        return userConverter.toUserModel(userRepository.findUserByUsername(username));
     }
 
     /**

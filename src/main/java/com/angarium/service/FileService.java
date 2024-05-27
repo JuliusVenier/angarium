@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 public class FileService {
     private final FileMetaDataRepository fileMetaDataRepository;
     private final UserRepository userRepository;
+    private final FileMetaDataConverter fileMetaDataConverter;
 
     @ConfigProperty(name = "anagarium.config.dir")
     String fileDir;
@@ -36,7 +37,7 @@ public class FileService {
     @Transactional
     public void upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
         UserEntity userEntity =  userRepository.findUserByUsername("default"); //securityContext.getUserPrincipal().getName());
-        FileMetaDataEntity fileMetaDataEntity = FileMetaDataConverter.toFileMetaDataEntity(newFileMetaDataModel, userEntity);
+        FileMetaDataEntity fileMetaDataEntity = fileMetaDataConverter.toFileMetaDataEntity(newFileMetaDataModel, userEntity);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 
         moveFile(file, fileMetaDataEntity.getId().toString());
