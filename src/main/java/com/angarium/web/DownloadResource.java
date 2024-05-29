@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 
 import java.io.File;
+import java.io.IOException;
 
 @Path("/api/download")
 @JBossLog
@@ -21,7 +22,7 @@ public class DownloadResource {
     @PUT
     @Path("/{id}")
     @RunOnVirtualThread
-    public Response download(String id) {
+    public Response download(String id) throws IOException {
         DownloadModel downloadModel = fileService.download(id);
         Response.ResponseBuilder response = Response.ok((Object) downloadModel.getFile());
         response.header("Content-Disposition", "attachment;filename=" + downloadModel.getFileMetaDataModel().getName());

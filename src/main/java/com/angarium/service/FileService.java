@@ -8,6 +8,7 @@ import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.repository.FileMetaDataRepository;
 import com.angarium.repository.UserRepository;
+import com.angarium.service.exception.FileServiceException;
 import com.angarium.utils.converter.FileMetaDataConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -54,9 +57,31 @@ public class FileService {
         Files.move(file.toPath(), target);
     }
 
-    public DownloadModel download(String fileId) {
-        FileMetaDataModel fileMetaDataModel = fileMetaDataConverter.toFileMetaDataModel(fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId)));
+    @Transactional
+    public DownloadModel download(String fileId) throws IOException {
+        FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
+        int currentDownloads = fileMetaDataEntity.getCurrentDownloads();
+
+        if(currentDownloads >= fileMetaDataEntity.getMaxDownloads()){
+            deleteFile(fileMetaDataEntity.getId());
+            throw new FileServiceException("Maximum number of downloads has been reached");
+        }
+        currentDownloads++;
+
+        if(LocalDate.now().equals(fileMetaDataEntity.getDeletionDate())) {
+            deleteFile(fileMetaDataEntity.getId());
+            throw new FileServiceException("File has reached its deletion date and cannot be downloaded");
+        }
+
+        fileMetaDataRepository.persist(fileMetaDataEntity);
+
+        FileMetaDataModel fileMetaDataModel = fileMetaDataConverter.toFileMetaDataModel(fileMetaDataEntity);
 
         return new DownloadModel(new File(Paths.get(fileDir, fileId).toUri()), fileMetaDataModel);
+    }
+
+    private void deleteFile(UUID fileId) throws IOException {
+        Files.deleteIfExists(Paths.get(fileDir, fileId.toString()));
+        fileMetaDataRepository.deleteFileMetaDataByUUID(fileId);
     }
 }

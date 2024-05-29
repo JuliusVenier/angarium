@@ -13,4 +13,8 @@ public class FileMetaDataRepository implements PanacheRepository<FileMetaDataEnt
         return find("id", uuid).firstResult();
     }
 
+    public void deleteFileMetaDataByUUID(UUID uuid) {
+        delete("id", uuid);
+    }
+
 }
