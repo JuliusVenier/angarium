@@ -2,6 +2,7 @@ package com.angarium.service;
 
 import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.entity.UserEntity;
+import com.angarium.model.FileIdModel;
 import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.repository.FileMetaDataRepository;
 import com.angarium.repository.UserRepository;
@@ -35,12 +36,13 @@ public class FileService {
     SecurityContext securityContext;
 
     @Transactional
-    public void upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
+    public FileIdModel upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
         UserEntity userEntity =  userRepository.findUserByUsername("default"); //securityContext.getUserPrincipal().getName());
         FileMetaDataEntity fileMetaDataEntity = fileMetaDataConverter.toFileMetaDataEntity(newFileMetaDataModel, userEntity);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 
         moveFile(file, fileMetaDataEntity.getId().toString());
+        return new FileIdModel(fileMetaDataEntity.getId().toString());
     }
 
     private void moveFile(File file, String fileId) throws IOException {

@@ -47,6 +47,12 @@ public class FileMetaDataModel {
      * TODO
      */
     private final String sha256;
+
+    /**
+     * TODO
+     */
+    private final boolean encrypted;
+
     /**
      * Der User der die Datei hochgeladen hat
      */

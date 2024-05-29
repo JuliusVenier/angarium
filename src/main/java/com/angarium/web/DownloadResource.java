@@ -1,30 +1,31 @@
 package com.angarium.web;
 
-import com.angarium.model.FileIdModel;
-import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.service.FileService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
-import jakarta.ws.rs.BeanParam;
+import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 
 import java.io.File;
-import java.io.IOException;
 
 @Path("/api/upload")
 @JBossLog
 @RequiredArgsConstructor
-public class UploadResource {
-
+public class DownloadResource {
     private final FileService fileService;
 
     @PUT
-    @Path("/{name}")
+    @Path("/{id}")
     @RunOnVirtualThread
-    public FileIdModel upload(@BeanParam NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
-        return fileService.upload(newFileMetaDataModel, file);
+    public Response download(String id) {
 
+        Object nf = new Object();
+
+        Response.ResponseBuilder response = Response.ok((Object) nf);
+        response.header("Content-Disposition", "attachment;filename=" + nf);
+        return response.build();
     }
 }

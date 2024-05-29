@@ -44,6 +44,7 @@ public class FileMetaDataConverter {
                 .creationDate(LocalDate.now())
                 .deletionDate(LocalDate.now().plusDays(calcMaxDays(newFileMetaDataModel)))
                 .sha256(newFileMetaDataModel.getSha256())
+                .encrypted(newFileMetaDataModel.getEncrypted())
                 .userEntity(userEntity)
                 .build();
     }
@@ -72,6 +73,7 @@ public class FileMetaDataConverter {
                 fileMetaDataEntity.getCreationDate(),
                 fileMetaDataEntity.getDeletionDate(),
                 fileMetaDataEntity.getSha256(),
+                fileMetaDataEntity.isEncrypted(),
                 userConverter.toUserModel(fileMetaDataEntity.getUserEntity())
         );
     }

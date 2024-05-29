@@ -35,6 +35,12 @@ public class NewFileMetaDataModel {
     Integer maxDays;
 
     /**
+     *
+     */
+    @RestHeader("encrypted")
+    Boolean encrypted;
+
+    /**
      * TODO
      */
     @RestHeader("sha256")

@@ -3,6 +3,7 @@ package com.angarium.utils.converter;
 import com.angarium.entity.UserEntity;
 import com.angarium.model.NewUserModel;
 import com.angarium.model.UserModel;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,6 @@ public class UserConverter {
      */
     public UserEntity toUserEntity(@NonNull NewUserModel newUser) {
 
-        return new UserEntity(newUser.getUsername(), newUser.getPassword(), newUser.getRole());
+        return new UserEntity(newUser.getUsername(), BcryptUtil.bcryptHash(newUser.getPassword()), newUser.getRole());
     }
 }

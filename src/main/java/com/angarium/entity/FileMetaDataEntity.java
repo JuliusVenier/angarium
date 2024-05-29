@@ -64,6 +64,11 @@ public class FileMetaDataEntity {
     private String sha256;
 
     /**
+     * TODO
+     */
+    private boolean encrypted;
+
+    /**
      * Der User der die Datei hochgeladen hat
      */
     @ManyToOne
