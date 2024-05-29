@@ -2,7 +2,9 @@ package com.angarium.service;
 
 import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.entity.UserEntity;
+import com.angarium.model.DownloadModel;
 import com.angarium.model.FileIdModel;
+import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.repository.FileMetaDataRepository;
 import com.angarium.repository.UserRepository;
@@ -20,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -49,5 +52,11 @@ public class FileService {
         Path target = Paths.get(fileDir, fileId);
         Files.createDirectories(target.getParent());
         Files.move(file.toPath(), target);
+    }
+
+    public DownloadModel download(String fileId) {
+        FileMetaDataModel fileMetaDataModel = fileMetaDataConverter.toFileMetaDataModel(fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId)));
+
+        return new DownloadModel(new File(Paths.get(fileDir, fileId).toUri()), fileMetaDataModel);
     }
 }

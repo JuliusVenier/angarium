@@ -5,10 +5,7 @@ import com.angarium.entity.UserEntity;
 import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
@@ -18,8 +15,11 @@ import java.time.LocalDate;
 public class FileMetaDataConverter {
     private final UserConverter userConverter;
 
-    @ConfigProperty(name = "angarium.config.max-days")
-    int maxDays;
+    @ConfigProperty(name = "angarium.config.default-days")
+    int defaultDays;
+
+    @ConfigProperty(name = "angarium.config.default-downloads")
+    int defaultDownloads;
 
     /**
      * Konvertiert ein 'NewFileMetaDataModel'-Objekt in ein 'FileMetaDataEntity'-Objekt.
@@ -40,21 +40,29 @@ public class FileMetaDataConverter {
 
         return FileMetaDataEntity.builder()
                 .name(newFileMetaDataModel.getName())
-                .maxDownloads(newFileMetaDataModel.getMaxDownloads())
+                .maxDownloads(calcMaxDownloads(newFileMetaDataModel))
                 .creationDate(LocalDate.now())
                 .deletionDate(LocalDate.now().plusDays(calcMaxDays(newFileMetaDataModel)))
                 .sha256(newFileMetaDataModel.getSha256())
-                .encrypted(newFileMetaDataModel.getEncrypted())
+                .encrypted(newFileMetaDataModel.getEncrypted() != null && newFileMetaDataModel.getEncrypted())
                 .userEntity(userEntity)
                 .build();
     }
 
     private int calcMaxDays(NewFileMetaDataModel newFileMetaDataModel){
         if (newFileMetaDataModel.getMaxDays() == null){
-            return maxDays;
+            return defaultDays;
         }
 
         return newFileMetaDataModel.getMaxDays();
+    }
+
+    private int calcMaxDownloads(NewFileMetaDataModel newFileMetaDataModel){
+        if (newFileMetaDataModel.getMaxDays() == null){
+            return defaultDownloads;
+        }
+
+        return newFileMetaDataModel.getMaxDownloads();
     }
 
     /**

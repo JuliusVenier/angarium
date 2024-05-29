@@ -1,5 +1,6 @@
 package com.angarium.web;
 
+import com.angarium.model.DownloadModel;
 import com.angarium.service.FileService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.ws.rs.GET;
@@ -11,7 +12,7 @@ import lombok.extern.jbosslog.JBossLog;
 
 import java.io.File;
 
-@Path("/api/upload")
+@Path("/api/download")
 @JBossLog
 @RequiredArgsConstructor
 public class DownloadResource {
@@ -21,11 +22,9 @@ public class DownloadResource {
     @Path("/{id}")
     @RunOnVirtualThread
     public Response download(String id) {
-
-        Object nf = new Object();
-
-        Response.ResponseBuilder response = Response.ok((Object) nf);
-        response.header("Content-Disposition", "attachment;filename=" + nf);
+        DownloadModel downloadModel = fileService.download(id);
+        Response.ResponseBuilder response = Response.ok((Object) downloadModel.getFile());
+        response.header("Content-Disposition", "attachment;filename=" + downloadModel.getFileMetaDataModel().getName());
         return response.build();
     }
 }
