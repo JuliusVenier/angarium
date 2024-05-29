@@ -19,7 +19,7 @@ import java.io.IOException;
 public class DownloadResource {
     private final FileService fileService;
 
-    @PUT
+    @GET
     @Path("/{id}")
     @RunOnVirtualThread
     public Response download(String id) throws IOException {

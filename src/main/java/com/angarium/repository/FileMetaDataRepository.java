@@ -3,10 +3,12 @@ package com.angarium.repository;
 import com.angarium.entity.FileMetaDataEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.extern.jbosslog.JBossLog;
 
 import java.util.UUID;
 
 @ApplicationScoped
+@JBossLog
 public class FileMetaDataRepository implements PanacheRepository<FileMetaDataEntity> {
 
     public FileMetaDataEntity findFileMetaDataByUUID(UUID uuid) {
@@ -14,7 +16,7 @@ public class FileMetaDataRepository implements PanacheRepository<FileMetaDataEnt
     }
 
     public void deleteFileMetaDataByUUID(UUID uuid) {
-        delete("id", uuid);
+        log.error(delete("id", uuid));
     }
 
 }

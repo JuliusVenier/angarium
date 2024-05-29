@@ -8,7 +8,7 @@ import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.repository.FileMetaDataRepository;
 import com.angarium.repository.UserRepository;
-import com.angarium.service.exception.FileServiceException;
+import com.angarium.service.exception.FileLimitsReachedException;
 import com.angarium.utils.converter.FileMetaDataConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -24,7 +24,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -57,22 +56,23 @@ public class FileService {
         Files.move(file.toPath(), target);
     }
 
-    @Transactional
+    @Transactional(dontRollbackOn = FileLimitsReachedException.class)
     public DownloadModel download(String fileId) throws IOException {
         FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
         int currentDownloads = fileMetaDataEntity.getCurrentDownloads();
 
         if(currentDownloads >= fileMetaDataEntity.getMaxDownloads()){
             deleteFile(fileMetaDataEntity.getId());
-            throw new FileServiceException("Maximum number of downloads has been reached");
+            throw new FileLimitsReachedException("Maximum number of downloads has been reached");
         }
         currentDownloads++;
 
         if(LocalDate.now().equals(fileMetaDataEntity.getDeletionDate())) {
             deleteFile(fileMetaDataEntity.getId());
-            throw new FileServiceException("File has reached its deletion date and cannot be downloaded");
+            throw new FileLimitsReachedException("File has reached its deletion date and cannot be downloaded");
         }
 
+        fileMetaDataEntity.setCurrentDownloads(currentDownloads);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 
         FileMetaDataModel fileMetaDataModel = fileMetaDataConverter.toFileMetaDataModel(fileMetaDataEntity);
