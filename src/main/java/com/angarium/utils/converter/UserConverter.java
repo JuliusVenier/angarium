@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @ApplicationScoped
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserConverter {
 
     /**
