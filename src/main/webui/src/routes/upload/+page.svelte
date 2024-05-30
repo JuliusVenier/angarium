@@ -18,7 +18,11 @@
 </style>
 <script>
     import {onMount} from "svelte";
-    import {encryptFile, hashFile} from "$lib/cryptography.js";
+    import {encryptFile, hashFile, convertArrayBufferToHex } from "$lib/cryptography.js";
+
+    //Testing imports
+    import { decryptFile, hashArrayBuffer } from "$lib/cryptography.js";
+
 
     const fileID = "file";
     const nameID = "name";
@@ -90,6 +94,7 @@
         let hash = null;
         try {
             hash = await hashFile(file);
+            hash = convertArrayBufferToHex(hash);
         } catch(e) {}
         console.log("end hash: ", hash);
 
@@ -103,27 +108,39 @@
                 }
             } catch(e) {}
             console.log("end encrypt: ", file);
+
+            // decrypt test -----------------
+            /*
+            let encHash = await hashArrayBuffer(file);
+            encHash = convertArrayBufferToHex(encHash);
+            console.log("encHash: ", encHash);
+
+            let decrypted = await decryptFile(file, password);
+            let decHash = await hashArrayBuffer(decrypted);
+            decHash = convertArrayBufferToHex(decHash);
+            console.log("decHash: ", decHash);
+            */
+            // -------------------------------
         }
 
-        //TODO file fetch call
-        /*
         //Upload API Call
-        fetch("/api/upload", {
+        let url = "/api/upload/" + nameInput.value;
+        fetch(url, {
             method: "PUT",
             body: file,
             headers: {
                 "max-days": timeAvailable,
                 "max-downloads": maxDownloadCnt,
-                "hash": hash
+                "sha256": hash
             }
         })
         .then((response) => {
             console.log(response.status);
+            alert("success");
         })
         .catch((error) => {
             console.error(error);
         });
-        */
     }
 
 </script>

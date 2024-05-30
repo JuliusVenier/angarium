@@ -46,6 +46,12 @@ function convertFileToArrayBuffer(file, callback) {
     }
 }*/
 
+export function convertArrayBufferToHex(buffer) {
+    return [...new Uint8Array(buffer)]
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('');
+}
+
 export function hashFile(file) {
     return new Promise((resolve, reject) => {
         convertFileToArrayBuffer(file, (e) => {
@@ -71,7 +77,30 @@ export function hashFile(file) {
         });
     });
 }
-let iv = crypto.getRandomValues(new Uint8Array(16));
+export function hashArrayBuffer(buffer) {
+    return new Promise((resolve, reject) => {
+        try {
+            const data = buffer;
+
+            crypto.subtle.digest("SHA-256", data)
+                .then(hash => {
+                    resolve(hash);
+                })
+                .catch(error => {
+                    console.error(error);
+                    reject();
+                });
+        }
+        catch(error) {
+            console.error(error);
+            reject();
+        }
+    });
+}
+
+
+//let iv = crypto.getRandomValues(new Uint8Array(16));
+let iv = new Uint8Array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]);
 
 export function encryptFile(file, pw) {
     return new Promise((resolve, reject) => {
@@ -117,7 +146,7 @@ export function encryptFile(file, pw) {
 }
 
 //TODO file decryption
-/*export function decryptFile(encrypt, pw) {
+export function decryptFile(encrypt, pw) {
     return new Promise(async (resolve, reject) => {
         try {
             let pwKey = await crypto.subtle.importKey(
@@ -149,11 +178,11 @@ export function encryptFile(file, pw) {
                 encrypt
             );
 
-            convertArrayBufferToFile(decrypt);
-            resolve();
+            //convertArrayBufferToFile(decrypt);
+            resolve(decrypt);
         } catch (ex) {
             console.error(ex);
             reject();
         }
     });
-}*/
+}
