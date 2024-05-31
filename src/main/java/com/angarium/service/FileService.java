@@ -58,7 +58,7 @@ public class FileService {
 
     @Transactional(dontRollbackOn = FileLimitsReachedException.class)
     public DownloadModel download(String fileId) throws IOException {
-        FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
+        FileMetaDataEntity fileMetaDataEntity = findFileMetaData(fileId);
         int currentDownloads = fileMetaDataEntity.getCurrentDownloads();
 
         if(currentDownloads >= fileMetaDataEntity.getMaxDownloads()){
@@ -83,5 +83,13 @@ public class FileService {
     private void deleteFile(UUID fileId) throws IOException {
         Files.deleteIfExists(Paths.get(fileDir, fileId.toString()));
         fileMetaDataRepository.deleteFileMetaDataByUUID(fileId);
+    }
+
+    private FileMetaDataEntity findFileMetaData(String fileId) {
+        return fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
+    }
+
+    public FileMetaDataModel getFileMetaData(String fileId) {
+        return fileMetaDataConverter.toFileMetaDataModel(findFileMetaData(fileId));
     }
 }

@@ -24,7 +24,7 @@ public class DownloadResource {
     @RunOnVirtualThread
     public Response download(String id) throws IOException {
         DownloadModel downloadModel = fileService.download(id);
-        Response.ResponseBuilder response = Response.ok((Object) downloadModel.getFile());
+        Response.ResponseBuilder response = Response.ok(downloadModel.getFile());
         response.header("Content-Disposition", "attachment;filename=" + downloadModel.getFileMetaDataModel().getName());
         return response.build();
     }
