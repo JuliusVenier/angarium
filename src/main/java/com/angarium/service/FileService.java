@@ -8,7 +8,7 @@ import com.angarium.model.FileMetaDataModel;
 import com.angarium.model.NewFileMetaDataModel;
 import com.angarium.repository.FileMetaDataRepository;
 import com.angarium.repository.UserRepository;
-import com.angarium.service.exception.FileLimitsReachedException;
+import com.angarium.service.exception.FileDownloadLimitsReachedException;
 import com.angarium.utils.converter.FileMetaDataConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -56,23 +57,19 @@ public class FileService {
         Files.move(file.toPath(), target);
     }
 
-    @Transactional(dontRollbackOn = FileLimitsReachedException.class)
+    @Transactional(dontRollbackOn = FileDownloadLimitsReachedException.class)
     public DownloadModel download(String fileId) throws IOException {
         FileMetaDataEntity fileMetaDataEntity = findFileMetaData(fileId);
         int currentDownloads = fileMetaDataEntity.getCurrentDownloads();
 
-        if(currentDownloads >= fileMetaDataEntity.getMaxDownloads()){
+        try {
+            checkFileDownloadLimits(fileMetaDataEntity);
+        } catch (FileDownloadLimitsReachedException ex) {
             deleteFile(fileMetaDataEntity.getId());
-            throw new FileLimitsReachedException("Maximum number of downloads has been reached");
-        }
-        currentDownloads++;
-
-        if(LocalDate.now().equals(fileMetaDataEntity.getDeletionDate())) {
-            deleteFile(fileMetaDataEntity.getId());
-            throw new FileLimitsReachedException("File has reached its deletion date and cannot be downloaded");
+            throw ex;
         }
 
-        fileMetaDataEntity.setCurrentDownloads(currentDownloads);
+        fileMetaDataEntity.setCurrentDownloads(++currentDownloads);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 
         FileMetaDataModel fileMetaDataModel = fileMetaDataConverter.toFileMetaDataModel(fileMetaDataEntity);
@@ -80,7 +77,27 @@ public class FileService {
         return new DownloadModel(new File(Paths.get(fileDir, fileId).toUri()), fileMetaDataModel);
     }
 
-    private void deleteFile(UUID fileId) throws IOException {
+    private void checkFileDownloadLimits(FileMetaDataEntity fileMetaDataEntity) {
+        if(fileMetaDataEntity.getCurrentDownloads() >= fileMetaDataEntity.getMaxDownloads()){
+            throw new FileDownloadLimitsReachedException("Maximum number of downloads has been reached");
+        }
+
+        if(LocalDate.now().equals(fileMetaDataEntity.getDeletionDate())) {
+            throw new FileDownloadLimitsReachedException("File has reached its deletion date and cannot be downloaded");
+        }
+    }
+
+    @Transactional
+    public void deleteFilesThatHaveReachedTheirLimit() throws IOException {
+        List<FileMetaDataEntity> entities = fileMetaDataRepository.findFilesThatHaveReachedTheirLimits();
+        fileMetaDataRepository.deleteFilesThatHaveReachedTheirLimits();
+
+        for(FileMetaDataEntity entity: entities){
+            deleteFile(entity.getId());
+        }
+    }
+
+    public void deleteFile(UUID fileId) throws IOException {
         Files.deleteIfExists(Paths.get(fileDir, fileId.toString()));
         fileMetaDataRepository.deleteFileMetaDataByUUID(fileId);
     }
