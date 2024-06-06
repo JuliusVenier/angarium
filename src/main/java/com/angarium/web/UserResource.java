@@ -10,6 +10,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Path("/api/user")
 public class UserResource {
@@ -28,5 +30,13 @@ public class UserResource {
     @RolesAllowed({"user", "admin"})
     public UserModel whoami(@Context SecurityContext securityContext){
         return userService.findByUsername(securityContext.getUserPrincipal().getName());
+    }
+
+    @GET
+    @Path("/all")
+    @RunOnVirtualThread
+    @RolesAllowed("admin")
+    public List<UserModel> listAllUsers() {
+        return userService.listAllUsers();
     }
 }

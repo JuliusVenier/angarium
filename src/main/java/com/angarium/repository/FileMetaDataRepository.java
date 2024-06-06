@@ -2,6 +2,7 @@ package com.angarium.repository;
 
 import com.angarium.entity.FileMetaDataEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.jbosslog.JBossLog;
 
@@ -22,11 +23,11 @@ public class FileMetaDataRepository implements PanacheRepository<FileMetaDataEnt
     }
 
     public List<FileMetaDataEntity> findFilesThatHaveReachedTheirLimits(){
-        return list("from file-meta-data where max-downloads = current-downloads and deletion-date = ?1", LocalDate.now());
+        return list("from file-meta-data where max-downloads = current-downloads and deletion-date = ?", LocalDate.now());
     }
 
     public void deleteFilesThatHaveReachedTheirLimits(){
-        delete("delete file-meta-data where max-downloads = current-downloads and deletion-date = ?1", LocalDate.now());
+        delete("delete file-meta-data where max-downloads = current-downloads and deletion-date = ?", LocalDate.now());
     }
 
 }

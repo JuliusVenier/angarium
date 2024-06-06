@@ -9,6 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @ApplicationScoped
 @RequiredArgsConstructor
 public class UserService {
@@ -40,6 +42,12 @@ public class UserService {
      */
     public UserModel findByUsername(String username) {
         return userConverter.toUserModel(userRepository.findUserByUsername(username));
+    }
+
+    public List<UserModel> listAllUsers() {
+        return userRepository.listAll().stream()
+                .map(userConverter::toUserModel)
+                .toList();
     }
 
     /**
