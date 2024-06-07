@@ -1,6 +1,7 @@
 package com.angarium.web;
 
 import com.angarium.model.NewStandardUserModel;
+import com.angarium.model.ResetUserModel;
 import com.angarium.model.UserModel;
 import com.angarium.service.UserService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
@@ -59,18 +60,11 @@ public class UserResource {
     }
 
     @POST
-    @Path("/reset/password/{id}")
+    @Path("/reset/{id}")
     @RunOnVirtualThread
     @RolesAllowed("admin")
-    public void resetUserPassword(Long id){
-        userService.resetUserPassword(id);
+    public void resetUserPassword(Long id, ResetUserModel resetUserModel){
+        userService.resetUserPassword(id, resetUserModel);
     }
 
-    @POST
-    @Path("/change/username/{id}")
-    @RunOnVirtualThread
-    @RolesAllowed("admin")
-    public void resetUser(Long id){
-        userService.resetUserPassword(id);
-    }
 }

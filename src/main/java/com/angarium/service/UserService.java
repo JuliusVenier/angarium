@@ -3,12 +3,14 @@ package com.angarium.service;
 import com.angarium.entity.UserEntity;
 import com.angarium.model.NewStandardUserModel;
 import com.angarium.model.NewUserModel;
+import com.angarium.model.ResetUserModel;
 import com.angarium.model.UserModel;
 import com.angarium.repository.UserRepository;
 import com.angarium.utils.converter.UserConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
@@ -88,9 +90,14 @@ public class UserService {
      *
      */
     @Transactional
-    public void resetUserPassword(Long id) {
+    public void resetUserPassword(Long id, ResetUserModel resetUserModel) {
         UserEntity userEntity = userRepository.findById(id);
-        userEntity.setPassword(defaultUserPassword);
+        if (resetUserModel.isResetPassword()){
+            userEntity.setPassword(defaultUserPassword);
+        }
+        if (StringUtils.isBlank(resetUserModel.getNewUsername())) {
+            userEntity.setUsername(resetUserModel.getNewUsername());
+        }
         userRepository.persist(userEntity);
     }
 }
