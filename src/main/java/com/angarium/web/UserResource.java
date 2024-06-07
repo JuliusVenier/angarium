@@ -1,10 +1,13 @@
 package com.angarium.web;
 
+import com.angarium.model.NewStandardUserModel;
 import com.angarium.model.UserModel;
 import com.angarium.service.UserService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
@@ -38,5 +41,36 @@ public class UserResource {
     @RolesAllowed("admin")
     public List<UserModel> listAllUsers() {
         return userService.listAllUsers();
+    }
+
+    @POST
+    @RunOnVirtualThread
+    @RolesAllowed("admin")
+    public UserModel createStandardUser(NewStandardUserModel newStandardUserModel){
+        return userService.createStandardUser(newStandardUserModel);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    @RunOnVirtualThread
+    @RolesAllowed("admin")
+    public void deleteUser(Long id) {
+        userService.deleteUser(id);
+    }
+
+    @POST
+    @Path("/reset/password/{id}")
+    @RunOnVirtualThread
+    @RolesAllowed("admin")
+    public void resetUserPassword(Long id){
+        userService.resetUserPassword(id);
+    }
+
+    @POST
+    @Path("/change/username/{id}")
+    @RunOnVirtualThread
+    @RolesAllowed("admin")
+    public void resetUser(Long id){
+        userService.resetUserPassword(id);
     }
 }

@@ -1,6 +1,7 @@
 package com.angarium.service;
 
 import com.angarium.entity.UserEntity;
+import com.angarium.model.NewStandardUserModel;
 import com.angarium.model.NewUserModel;
 import com.angarium.model.UserModel;
 import com.angarium.repository.UserRepository;
@@ -8,6 +9,7 @@ import com.angarium.utils.converter.UserConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 
@@ -17,6 +19,18 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
 
+    @ConfigProperty(name = "angarium.config.default-user-passwords")
+    String defaultUserPassword;
+
+    /*
+     * Erstellt einen neuen Standard Benutzer
+     *
+     * @param username Der Name des neuen Benutzers
+     * @throws IllegalArgumentException Wenn ein Benutzer mit dem gleichen Benutzernamen bereits existiert.
+     */
+    public UserModel createStandardUser(NewStandardUserModel newStandardUserModel){
+        return createUser(new NewUserModel(newStandardUserModel.getUsername(), defaultUserPassword, "user"));
+    }
     /**
      * Erstellt einen neuen Benutzer.
      *
@@ -24,15 +38,24 @@ public class UserService {
      * @throws IllegalArgumentException Wenn ein Benutzer mit dem gleichen Benutzernamen bereits existiert.
      */
     @Transactional
-    public void createUser(NewUserModel newUser) {
+    public UserModel createUser(NewUserModel newUser) {
         if (userExists(newUser.getUsername())){
             throw new IllegalArgumentException("A User with the username: " + newUser.getUsername() + " already exists");
         }
 
         UserEntity user = userConverter.toUserEntity(newUser);
         userRepository.persist(user);
+        return userConverter.toUserModel(user);
     }
 
+    /*
+     * TODO
+     *
+     */
+    @Transactional
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
     /**
      * Sucht nach einem Benutzer anhand seines Benutzernamens.
      *
@@ -58,5 +81,16 @@ public class UserService {
      */
     public boolean userExists(String username){
         return userRepository.findUserByUsername(username) != null;
+    }
+
+    /*
+     * TODO
+     *
+     */
+    @Transactional
+    public void resetUserPassword(Long id) {
+        UserEntity userEntity = userRepository.findById(id);
+        userEntity.setPassword(defaultUserPassword);
+        userRepository.persist(userEntity);
     }
 }
