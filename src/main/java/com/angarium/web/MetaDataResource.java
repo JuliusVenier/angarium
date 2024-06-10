@@ -24,7 +24,7 @@ public class MetaDataResource {
     }
 
     @GET
-    @Path("/me")
+    @Path("/me/files")
     @RunOnVirtualThread
     @RolesAllowed("user")
     public List<FileMetaDataModel> getMyFiles() {
