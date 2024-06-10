@@ -23,11 +23,15 @@ public class FileMetaDataRepository implements PanacheRepository<FileMetaDataEnt
     }
 
     public List<FileMetaDataEntity> findFilesThatHaveReachedTheirLimits(){
-        return list("from file-meta-data where max-downloads = current-downloads and deletion-date = ?", LocalDate.now());
+        return list("from file_meta_data where max_downloads = current_downloads and deletion_date = ?1", LocalDate.now());
     }
 
     public void deleteFilesThatHaveReachedTheirLimits(){
-        delete("delete file-meta-data where max-downloads = current-downloads and deletion-date = ?", LocalDate.now());
+        delete("delete file_meta_data where max_downloads = current_downloads and deletion_date = ?1", LocalDate.now());
+    }
+
+    public List<FileMetaDataEntity> findFilesByUsername(String username) {
+        return list("select f from FileMetaDataEntity f join f.userEntity u where u.username = ?1", username);
     }
 
 }

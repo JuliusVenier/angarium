@@ -109,4 +109,10 @@ public class FileService {
     public FileMetaDataModel getFileMetaData(String fileId) {
         return fileMetaDataConverter.toFileMetaDataModel(findFileMetaData(fileId));
     }
+
+    public List<FileMetaDataModel> getMyFiles() {
+        return fileMetaDataRepository.findFilesByUsername(securityContext.getUserPrincipal().getName()).stream()
+                .map(fileMetaDataConverter::toFileMetaDataModel)
+                .toList();
+    }
 }

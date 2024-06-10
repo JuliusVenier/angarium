@@ -1,14 +1,13 @@
 package com.angarium.service;
 
 import com.angarium.entity.UserEntity;
-import com.angarium.model.NewStandardUserModel;
-import com.angarium.model.NewUserModel;
-import com.angarium.model.ResetUserModel;
-import com.angarium.model.UserModel;
+import com.angarium.model.*;
 import com.angarium.repository.UserRepository;
 import com.angarium.utils.converter.UserConverter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -23,6 +22,9 @@ public class UserService {
 
     @ConfigProperty(name = "angarium.config.default-user-passwords")
     String defaultUserPassword;
+
+    @Context
+    SecurityContext securityContext;
 
     /*
      * Erstellt einen neuen Standard Benutzer
@@ -90,14 +92,17 @@ public class UserService {
      *
      */
     @Transactional
-    public void resetUserPassword(Long id, ResetUserModel resetUserModel) {
+    public void resetUserPassword(Long id) {
         UserEntity userEntity = userRepository.findById(id);
-        if (resetUserModel.isResetPassword()){
-            userEntity.setPassword(defaultUserPassword);
-        }
-        if (StringUtils.isBlank(resetUserModel.getNewUsername())) {
-            userEntity.setUsername(resetUserModel.getNewUsername());
-        }
+        userEntity.setPassword(defaultUserPassword);
+
+        userRepository.persist(userEntity);
+    }
+
+    public void updateUser(UpdateUserModel updateUserModel) {
+        UserEntity userEntity = userRepository.findUserByUsername(securityContext.getUserPrincipal().getName());
+        userEntity.setUsername(updateUserModel.getUsername());
+        userEntity.setPassword(updateUserModel.getPassword());
         userRepository.persist(userEntity);
     }
 }

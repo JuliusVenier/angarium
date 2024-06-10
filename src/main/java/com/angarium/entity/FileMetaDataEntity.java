@@ -18,7 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "file-meta-data")
+@Table(name = "file_meta_data")
 public class FileMetaDataEntity {
 
     /**
@@ -37,25 +37,25 @@ public class FileMetaDataEntity {
     /**
      * Die maximalen Downloads einer Datei
      */
-    @Column(name = "max-downloads", nullable = false, updatable = false)
+    @Column(name = "max_downloads", nullable = false, updatable = false)
     private int maxDownloads;
 
     /**
      * Die momentanen Downloads einer Datei
      */
-    @Column(name = "current-downloads")
+    @Column(name = "current_downloads")
     private int currentDownloads;
 
     /**
      * Der Zeitpunkt des Datei-Uploads
      */
-    @Column(name = "creation-date", nullable = false, updatable = false)
+    @Column(name = "creation_date", nullable = false, updatable = false)
     private LocalDate creationDate;
 
     /**
      * Zeitpunkt der Löschung der Datei
      */
-    @Column(name = "deletion-date", nullable = false, updatable = false)
+    @Column(name = "deletion_date", nullable = false, updatable = false)
     private LocalDate deletionDate;
 
     /**

@@ -1,8 +1,6 @@
 package com.angarium.web;
 
-import com.angarium.model.NewStandardUserModel;
-import com.angarium.model.ResetUserModel;
-import com.angarium.model.UserModel;
+import com.angarium.model.*;
 import com.angarium.service.UserService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;
@@ -29,11 +27,19 @@ public class UserResource {
      * @return Das UserModel des aktuell angemeldeten Benutzers.
      */
     @GET
-    @Path("/whoami")
+    @Path("/me/whoami")
     @RunOnVirtualThread
     @RolesAllowed({"user", "admin"})
     public UserModel whoami(@Context SecurityContext securityContext){
         return userService.findByUsername(securityContext.getUserPrincipal().getName());
+    }
+
+    @POST
+    @Path("/me/update")
+    @RunOnVirtualThread
+    @RolesAllowed({"admin", "user"})
+    public void updateUser(UpdateUserModel updateUserModel){
+        userService.updateUser(updateUserModel);
     }
 
     @GET
@@ -63,8 +69,8 @@ public class UserResource {
     @Path("/reset/{id}")
     @RunOnVirtualThread
     @RolesAllowed("admin")
-    public void resetUserPassword(Long id, ResetUserModel resetUserModel){
-        userService.resetUserPassword(id, resetUserModel);
+    public void resetUserPassword(Long id){
+        userService.resetUserPassword(id);
     }
 
 }
