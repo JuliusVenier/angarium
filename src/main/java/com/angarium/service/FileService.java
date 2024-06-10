@@ -43,7 +43,7 @@ public class FileService {
 
     @Transactional
     public FileIdModel upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
-        UserEntity userEntity =  userRepository.findUserByUsername("default"); //securityContext.getUserPrincipal().getName());
+        UserEntity userEntity =  userRepository.findUserByUsername(securityContext.getUserPrincipal().getName());
         FileMetaDataEntity fileMetaDataEntity = fileMetaDataConverter.toFileMetaDataEntity(newFileMetaDataModel, userEntity);
         fileMetaDataRepository.persist(fileMetaDataEntity);
 

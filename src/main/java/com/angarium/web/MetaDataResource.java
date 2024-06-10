@@ -4,6 +4,7 @@ import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.model.FileMetaDataModel;
 import com.angarium.service.FileService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class MetaDataResource {
     @GET
     @Path("/me")
     @RunOnVirtualThread
+    @RolesAllowed("user")
     public List<FileMetaDataModel> getMyFiles() {
         return fileService.getMyFiles();
     }
