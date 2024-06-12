@@ -4,6 +4,7 @@ import com.angarium.entity.UserEntity;
 import com.angarium.model.*;
 import com.angarium.repository.UserRepository;
 import com.angarium.utils.converter.UserConverter;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Context;
@@ -94,7 +95,7 @@ public class UserService {
     @Transactional
     public void resetUserPassword(Long id) {
         UserEntity userEntity = userRepository.findById(id);
-        userEntity.setPassword(defaultUserPassword);
+        userEntity.setPassword(BcryptUtil.bcryptHash(defaultUserPassword));
 
         userRepository.persist(userEntity);
     }
