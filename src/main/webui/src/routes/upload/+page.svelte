@@ -18,23 +18,21 @@
 </style>
 <script>
     import {onMount} from "svelte";
-    import {encryptFile, hashFile, convertArrayBufferToHex } from "$lib/cryptography.js";
+    import { encryptFile, hashFile, convertArrayBufferToHex, decryptFile} from "$lib/cryptography.js";
+    import { createMessage, encrypt, decrypt, readMessage } from "openpgp";
 
-    //Testing imports
-    import { decryptFile, hashArrayBuffer } from "$lib/cryptography.js";
-
-
-    const fileID = "file";
-    const nameID = "name";
-    const securityID = "sec";
-    const sharingID = "sha";
+    const fileID = "section_fileSelect";
+    const nameID = "section_filename";
+    const variousID = "section_various";
+    const linkID = "section_link";
     const fileTxt = "Datei auswählen";
     const nameTxt = "Name vergeben";
-    const securityTxt = "Sicherheit";
-    const sharingTxt = "Sharing Methode";
+    const variousTxt = "Zusätzliche Einstellungen";
+    const linkTxt = "Link";
 
     let fileInput;
     let nameInput;
+    let fileExtension;
     let usePassword = false;
     let password;
     let sendToUsers = false;
@@ -44,6 +42,16 @@
     onMount(() => {
         updateProgress();
     });
+
+    function fileSelected() {
+        let file = fileInput.files[0];
+        if (file !== null && file !== undefined) {
+            console.log(file);
+            let fileNameSplit = file.name.split('.');
+            nameInput.value = fileNameSplit[0];
+            fileExtension = "." + fileNameSplit[1];
+        }
+    }
 
     let progress = ["empty", "empty", "empty", "empty" ];
     function updateProgress() {
@@ -81,6 +89,7 @@
     function checkUploadParams() {
         return !progress.includes("empty");
     }
+
     async function uploadFile() {
         //TODO check inputs, progress system not finished
         /*if(!checkUploadParams()) {
@@ -88,58 +97,79 @@
             return;
         }*/
 
+        let uploadSuccess = true;
         let file = fileInput.files[0];
 
-        console.log("start hash");
         let hash = null;
         try {
             hash = await hashFile(file);
             hash = convertArrayBufferToHex(hash);
         } catch(e) {}
-        console.log("end hash: ", hash);
+        console.log("hash: ", hash);
 
         if (usePassword) {
-            console.log("start encrypt");
-            try {
-                file = await encryptFile(file, password);
-                if (file === null || file === undefined) {
-                    console.log("encryption failed");
-                    return;
-                }
-            } catch(e) {}
-            console.log("end encrypt: ", file);
-
-            // decrypt test -----------------
+            // - Web Crypto API --------------
+            await encryptFile(file, password)
+                .then(encryptedFile => {
+                    console.log("encryptFile success", encryptedFile);
+                    file = encryptedFile;
+                })
+                .catch(ex => {
+                    console.error(ex);
+                    uploadSuccess = false;
+                });
+            //--------------------------------
+            // - openpgp ---------------------
             /*
-            let encHash = await hashArrayBuffer(file);
-            encHash = convertArrayBufferToHex(encHash);
-            console.log("encHash: ", encHash);
-
-            let decrypted = await decryptFile(file, password);
-            let decHash = await hashArrayBuffer(decrypted);
-            decHash = convertArrayBufferToHex(decHash);
-            console.log("decHash: ", decHash);
+            console.log("file", file);
+            let stream = file.stream();
+            const message = await createMessage({binary: stream});
+            console.log("message", message);
+            const encrypted = await encrypt({
+                message,
+                passwords: [password],
+                format: 'binary'
+            });
+            const encryptedMessage = await readMessage({
+                binaryMessage: encrypted
+            });
+            const { data: decrypted } = await decrypt({
+                message: encryptedMessage,
+                passwords: [password], // decrypt with password
+                format: 'binary' // output as Uint8Array
+            });
+            console.log(decrypted);
+            let decryptedFile = new File(decrypted, "decryptedFile.pdf", {type: 'application/pdf'})
+            console.log("decrypted", decryptedFile);
             */
-            // -------------------------------
+            //--------------------------------
+        }
+        console.log(file);
+        console.log(await convertArrayBufferToHex(await hashFile(file)));
+
+        if (uploadSuccess === false) {
+            alert("not successful");
+            return;
         }
 
         //Upload API Call
-        let url = "/api/upload/" + nameInput.value;
+        let url = "api/upload/" + nameInput.value;
         fetch(url, {
             method: "PUT",
             body: file,
             headers: {
-                "max-days": timeAvailable,
-                "max-downloads": maxDownloadCnt,
-                "sha256": hash
+                encrypted: usePassword,
+                sha256: hash,
+                'max-downloads': maxDownloadCnt,
+                'max-days': timeAvailable
             }
         })
         .then((response) => {
-            console.log(response.status);
+            console.log("api/upload/" + nameInput.value, response.status);
             alert("success");
         })
-        .catch((error) => {
-            console.error(error);
+        .catch((ex) => {
+            console.error(ex);
         });
     }
 
@@ -158,14 +188,14 @@
                 <li class="step"><a href="#{nameID}">{nameTxt}</a></li>
             {/if}
             {#if progress[2] === "done"}
-                <li class="step step-accent"><a href="#{securityID}">{securityTxt}</a></li>
+                <li class="step step-accent"><a href="#{variousID}">{variousTxt}</a></li>
             {:else}
-                <li class="step"><a href="#{securityID}">{securityTxt}</a></li>
+                <li class="step"><a href="#{variousID}">{variousTxt}</a></li>
             {/if}
             {#if progress[3] === "done"}
-                <li class="step step-accent"><a href="#{sharingID}">{sharingTxt}</a></li>
+                <li class="step step-accent"><a href="#{linkID}">{linkTxt}</a></li>
             {:else}
-                <li class="step"><a href="#{sharingID}">{sharingTxt}</a></li>
+                <li class="step"><a href="#{linkID}">Fertig</a></li>
             {/if}
         </ul>
     </div>
@@ -173,19 +203,19 @@
     <div class="w-3/4">
         <div id="{fileID}" class="pt-10 snap-start">
             <div class="section-content">
-                <input type="file" class="file-input file-input-bordered file-input-accent w-full max-w-xs" bind:this={fileInput} on:change={updateProgress} />
+                <input type="file" class="file-input file-input-bordered file-input-accent w-full max-w-xs" bind:this={fileInput} on:change={fileSelected} />
             </div>
         </div>
         <div id="{nameID}" class="pt-10 snap-start">
             <div class="section-content">
                 <div class="join">
-                    <input type="text" placeholder="Dateiname" class="input input-bordered w-full max-w-xs join-item" bind:this={nameInput} on:change={updateProgress} />
-                    <div class="btn btn-accent join-item">.pdf</div>
+                    <input type="text" placeholder="Dateiname" class="input input-bordered w-max join-item" bind:this={nameInput} on:change={updateProgress} />
+                    <div class="btn btn-accent join-item">{fileExtension}</div>
                 </div>
             </div>
         </div>
-        <div id="{securityID}" class="pt-10 snap-start">
-            <div class="section-header">{securityTxt}</div>
+        <div id="{variousID}" class="pt-10 snap-start">
+            <div class="section-header">{variousTxt}</div>
             <div class="section-content">
                 <div class="flex flex-row flex-wrap items-center">
                     <select class="select select-bordered w-20 max-w-xs" bind:value={timeAvailable}>
@@ -217,22 +247,17 @@
                 </div>
             </div>
         </div>
-        <div id="{sharingID}" class="pt-10 snap-start">
-            <div class="section-header">{sharingTxt}</div>
+        <button class="btn btn-outline btn-accent mt-20" on:click={uploadFile}>Datei hochladen</button>
+        <div class="divider w-4/5"></div>
+        <div id="{linkID}" class="pt-10 snap-start">
+            <div class="section-header">{linkTxt}</div>
             <div class="section-content">
-                <div class="flex flex-row flex-wrap items-center">
-                    <span>nur über Link</span>
-                    <input type="checkbox" class="toggle toggle-accent toggle-md mx-2" bind:checked={sendToUsers} on:change={updateProgress} />
-                    <span>direkt an Benutzer senden</span>
-                </div>
                 <div class="join mt-4 w-full">
-                    <input type="text" placeholder="Link" class="input input-bordered w-4/5 join-item" />
+                    <input type="text" placeholder="Link" class="input input-bordered w-4/6 join-item" readonly />
                     <button class="btn btn-accent join-item">Kopieren</button>
                 </div>
             </div>
         </div>
-        <div class="divider"></div>
-        <button class="btn btn-outline btn-accent" on:click={uploadFile}>Datei hochladen</button>
-        <div class="h-3/5"></div>
+        <div id="bottom-spacer" class="h-3/4"></div>
     </div>
 </div>

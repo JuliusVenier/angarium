@@ -16,18 +16,6 @@
         height: calc(100vh - 69px);
     }
 
-    .user-avatar {
-        border-radius: 100px;
-    }
-    .user-avatar:hover{
-        animation: user-avatar-animation .2s;
-        border-radius: 10px;
-    }
-    @keyframes user-avatar-animation {
-        from {border-radius: 100px;}
-        to {border-radius: 10px;}
-    }
-
     .login-window {
         position: fixed;
         width: 40vw;
@@ -51,6 +39,7 @@
 <script>
     import "../app.css";
     import Login from '../components/+login.svelte';
+    import User_Avatar from '../components/+user_avatar.svelte';
     import {onMount} from 'svelte';
     
     let authenticated = false;
@@ -86,8 +75,9 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="../upload">Share</a></li>
-                <li><a href="../download">Herunterladen</a></li>
+                <li><a href="../upload">Upload</a></li>
+                <li><a href="../download">Download</a></li>
+                <li><a href="../admin">Benutzer Verwaltung</a></li>
                 <!--<li>
                     <details>
                         <summary>Parent</summary>
@@ -100,20 +90,7 @@
             </ul>
         </div>
         <div class="navbar-end">
-            {#if authenticated}
-                <div id="login-button" class="size-12 bg-accent flex flex-col justify-center items-center rounded-full user-avatar tooltip tooltip-left" data-tip="Abmelden" on:click={logout}>
-                    <div class="size-4 rounded-full bg-accent-content"></div>
-                    <div class="h-1"></div>
-                    <div class="h-2 w-8 rounded-t-full bg-accent-content align-self-end"></div>
-                </div>
-            {:else}
-                <div id="login-button" class="size-12 bg-accent-content border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar tooltip tooltip-left" data-tip="Anmelden" on:click={openLogin}>
-                    <div class="size-4 rounded-full bg-accent"></div>
-                    <div class="h-1"></div>
-                    <div class="h-2 w-8 rounded-t-full bg-accent align-self-end"></div>
-                </div>
-            {/if}
-
+            <User_Avatar authenticated={authenticated} on:openLogin={openLogin} on:logout={logout}/>
         </div>
     </div>
     <div class="divider-layout"></div>

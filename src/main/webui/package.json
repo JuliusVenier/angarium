@@ -33,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"openpgp": "^5.11.1"
+		"openpgp": "^5.11.1",
+		"svelte-icons-pack": "^3.1.3"
 	}
 }
