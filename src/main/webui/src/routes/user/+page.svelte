@@ -77,7 +77,7 @@
         </div>
         <div class="flex flex-row gap-4 items-center w-full">
             <span>Benutzername</span>
-            <input type="text" class="input input-bordered w-full" bind:value={user.username} disabled/>
+            <input type="text" class="input input-bordered w-full" bind:value={user.username}/>
         </div>
         <div></div>
         <div class="flex flex-row gap-4 items-center w-full">

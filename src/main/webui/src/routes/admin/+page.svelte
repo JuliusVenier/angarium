@@ -27,8 +27,10 @@
             method: "GET"
         })
             .then(async (response) => {
-                console.log("api/user/all", response.status);
-                userList = await response.json();
+                console.log("api/user/all", response.status, response.statusText);
+                if (response.status === 200) {
+                    userList = await response.json();
+                }
             })
             .catch((ex) => {
                 console.error(ex);
@@ -184,15 +186,6 @@
 
     .row:hover:not(header) {
         @apply border-accent;
-    }
-
-    .row:hover:not(header) > .icon {
-        @apply visible;
-    }
-
-    .icon {
-        @apply cursor-pointer;
-        @apply invisible;
     }
 
 </style>
