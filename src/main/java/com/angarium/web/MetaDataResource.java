@@ -35,10 +35,10 @@ public class MetaDataResource {
     }
 
     @DELETE
-    @Path("/{fileId}")
+    @Path("/me/{fileId}")
     @RunOnVirtualThread
     @RolesAllowed("admin")
     public void deleteFiles(String fileId) throws IOException {
-        fileService.deleteFile(UUID.fromString(fileId));
+        fileService.deleteMyFiles(UUID.fromString(fileId));
     }
 }

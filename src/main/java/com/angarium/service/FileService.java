@@ -133,6 +133,14 @@ public class FileService {
         }
     }
 
+    public void deleteMyFiles(UUID fileID) throws IOException {
+        FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(fileID);
+
+        if(fileMetaDataEntity.getUserEntity().getUsername().equals(securityContext.getUserPrincipal().getName())){
+            deleteFile(fileID);
+        }
+    }
+
     /**
      * Löscht eine Datei.
      *

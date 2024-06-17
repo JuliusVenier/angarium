@@ -121,10 +121,18 @@ public class UserService {
      *
      * @param updateUserModel Das Modell, das die neuen Informationen des Benutzers enthält.
      */
+    @Transactional
     public void updateUser(UpdateUserModel updateUserModel) {
         UserEntity userEntity = userRepository.findUserByUsername(securityContext.getUserPrincipal().getName());
-        userEntity.setUsername(updateUserModel.getUsername());
-        userEntity.setPassword(updateUserModel.getPassword());
+
+        if (!StringUtils.isBlank(updateUserModel.getUsername())) {
+            userEntity.setUsername(updateUserModel.getUsername());
+        }
+
+        if (!StringUtils.isBlank(updateUserModel.getPassword())) {
+            userEntity.setPassword(updateUserModel.getPassword());
+        }
+
         userRepository.persist(userEntity);
     }
 }
