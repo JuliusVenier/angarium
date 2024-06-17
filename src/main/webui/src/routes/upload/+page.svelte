@@ -36,7 +36,7 @@
     let usePassword = false;
     let password;
     let sendToUsers = false;
-    let timeAvailable;
+    let timeAvailable = 1;
     let maxDownloadCnt;
 
     let downloadID;
@@ -107,47 +107,25 @@
             hash = await hashFile(file);
             hash = convertArrayBufferToHex(hash);
         } catch(e) {}
-        console.log("hash: ", hash);
+        //console.log("hash: ", hash);
 
         if (usePassword) {
-            // - Web Crypto API --------------
-            await encryptFile(file, password)
-                .then(encryptedFile => {
-                    console.log("encryptFile success", encryptedFile);
-                    file = encryptedFile;
-                })
-                .catch(ex => {
-                    console.error(ex);
-                    uploadSuccess = false;
-                });
-            //--------------------------------
-            // - openpgp ---------------------
-            /*
-            console.log("file", file);
-            let stream = file.stream();
-            const message = await createMessage({binary: stream});
-            console.log("message", message);
+            //console.log("file", file);
+            let buffer = await file.arrayBuffer();
+            let fileData = new Uint8Array(buffer);
+            //console.log("source array", fileData);
+
+            const message = await createMessage({binary: fileData});
+            //console.log("message", message);
+
             const encrypted = await encrypt({
                 message,
-                passwords: [password],
+                passwords: [password.value],
                 format: 'binary'
             });
-            const encryptedMessage = await readMessage({
-                binaryMessage: encrypted
-            });
-            const { data: decrypted } = await decrypt({
-                message: encryptedMessage,
-                passwords: [password], // decrypt with password
-                format: 'binary' // output as Uint8Array
-            });
-            console.log(decrypted);
-            let decryptedFile = new File(decrypted, "decryptedFile.pdf", {type: 'application/pdf'})
-            console.log("decrypted", decryptedFile);
-            */
-            //--------------------------------
+            //console.log("encrypted array", encrypted);
+            file = new File([encrypted], nameInput.value + fileExtension, {type: 'application/octet-stream'});
         }
-        console.log(file);
-        console.log(await convertArrayBufferToHex(await hashFile(file)));
 
         if (uploadSuccess === false) {
             alert("not successful");
@@ -155,7 +133,7 @@
         }
 
         //Upload API Call
-        let url = "api/upload/" + nameInput.value;
+        let url = "api/upload/" + nameInput.value + fileExtension;
         fetch(url, {
             method: "PUT",
             body: file,
@@ -232,12 +210,10 @@
             <div class="section-content">
                 <div class="flex flex-row flex-wrap items-center">
                     <select class="select select-bordered w-20 max-w-xs" bind:value={timeAvailable}>
-                        <option value="1">1h</option>
-                        <option value="4">4h</option>
-                        <option value="8">8h</option>
-                        <option value="12">12h</option>
-                        <option value="24">24h</option>
-                        <option value="48">48h</option>
+                        <option value="1">1 Tag</option>
+                        <option value="2">2 Tage</option>
+                        <option value="4">4 Tage</option>
+                        <option value="8">8 Tage</option>
                     </select>
                     <div class="w-full"></div>
                     <span class="ml-2 text-gray">Die Datei ist für {timeAvailable} Stunden verfügbar</span>

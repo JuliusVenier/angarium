@@ -3,6 +3,7 @@
 
     import { onMount } from "svelte";
     import { convertArrayBufferToHex, hashFile, decryptFile } from "$lib/cryptography.js";
+    import { createMessage, encrypt, decrypt, readMessage } from "openpgp";
 
     export let id;
     let validID = undefined;
@@ -63,10 +64,31 @@
                 }
 
                 let blob = await response.blob();
-                let file = new File([blob], filename + ".pdf", {type: 'application/pdf'});
+                let file = new File([blob], filename, {type: 'application/octet-stream'});
 
                 if (isEncrypted) {
-                    file = await decryptFile(file, password);
+                    let buffer = await file.arrayBuffer();
+                    let fileData = new Uint8Array(buffer);
+                    //console.log(fileData);
+                    const message = await readMessage({
+                        binaryMessage: fileData
+                    });
+
+                    try {
+                        const {data: decrypted} = await decrypt({
+                            message: message,
+                            passwords: [password], // decrypt with password
+                            format: 'binary' // output as Uint8Array
+                        });
+                        //console.log("decrypted array", decrypted);
+
+                        file = new File([decrypted], filename, {type: 'application/octet-stream'});
+                    }
+                    catch (ex) {
+                        console.error(ex);
+                        // TODO Alert User
+                        alert("wrong password");
+                    }
                 }
 
                 let hash = convertArrayBufferToHex(await hashFile(file));
