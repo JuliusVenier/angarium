@@ -1,6 +1,7 @@
 <script>
     import Label from "../components/shared/info/+label.svelte"
 
+    import { onMount } from "svelte";
     import { convertArrayBufferToHex, hashFile, decryptFile } from "$lib/cryptography.js";
 
     export let id;
@@ -12,6 +13,8 @@
 
     let filename;
     let fileHash;
+
+    onMount(checkFileID);
 
     function checkFileID() {
         if (id === null || id === undefined || id.length === 0) {
@@ -26,9 +29,10 @@
             method: "GET"
         })
             .then(async (response) => {
+                console.log("api/meta-data/" + id, response.status, response.statusText);
                 if(response.status === 200) {
-                    validID = true;
                     let body = await response.json();
+                    validID = true;
                     filename = body.name;
                     fileHash = body.sha256;
                     isEncrypted = body.encrypted;

@@ -75,6 +75,7 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
+                <li><a href="../my-files">Meine Dokumente</a></li>
                 <li><a href="../upload">Upload</a></li>
                 <li><a href="../download">Download</a></li>
                 <li><a href="../admin">Benutzer Verwaltung</a></li>

@@ -39,6 +39,8 @@
     let timeAvailable;
     let maxDownloadCnt;
 
+    let downloadID;
+
     onMount(() => {
         updateProgress();
     });
@@ -164,13 +166,24 @@
                 'max-days': timeAvailable
             }
         })
-        .then((response) => {
-            console.log("api/upload/" + nameInput.value, response.status);
-            alert("success");
+        .then(async (response) => {
+            console.log("api/upload/" + nameInput.value, response.status, response.statusText);
+            if (response.status === 200) {
+                alert("success");
+                let id = await response.json();
+                if (id !== null && id !== undefined && id.fileId.length > 0) {
+                    downloadID = window.location.host + "/download?id=" + id.fileId;
+                }
+            }
         })
         .catch((ex) => {
             console.error(ex);
         });
+    }
+
+    function copyLink() {
+        // TODO test for mobile devices (https://www.w3schools.com/howto/howto_js_copy_clipboard.asp)
+        navigator.clipboard.writeText(downloadID);
     }
 
 </script>
@@ -253,8 +266,8 @@
             <div class="section-header">{linkTxt}</div>
             <div class="section-content">
                 <div class="join mt-4 w-full">
-                    <input type="text" placeholder="Link" class="input input-bordered w-4/6 join-item" readonly />
-                    <button class="btn btn-accent join-item">Kopieren</button>
+                    <input type="text" placeholder="Link" class="input input-bordered w-4/6 join-item" readonly bind:value={downloadID}/>
+                    <button class="btn btn-accent join-item" on:click={copyLink}>Kopieren</button>
                 </div>
             </div>
         </div>
