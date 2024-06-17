@@ -130,7 +130,7 @@ public class UserService {
         }
 
         if (!StringUtils.isBlank(updateUserModel.getPassword())) {
-            userEntity.setPassword(updateUserModel.getPassword());
+            userEntity.setPassword(BcryptUtil.bcryptHash(updateUserModel.getPassword()));
         }
 
         userRepository.persist(userEntity);
