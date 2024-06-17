@@ -1,5 +1,4 @@
 <style>
-
     .page-layout {
         display: flex;
         flex-flow: column nowrap;
@@ -37,6 +36,7 @@
 
 </style>
 <script>
+    import angariumLogo from '$lib/angarium.svg';
     import "../app.css";
     import Login from '../components/+login.svelte';
     import User_Avatar from '../components/+user_avatar.svelte';
@@ -69,15 +69,16 @@
     <div class="navbar bg-base-100">
         <div class="navbar-start">
             <a class="text-xl flex flex-row justify-center" href="../">
-                <span class="font-bold bg-accent text-accent-content pb-1 pl-1 rounded">ang</span>
-                <span class="pb-1">arium</span>
+                <!--<span class="font-bold bg-accent text-accent-content pb-1 pl-1 rounded">ang</span>
+                <span class="pb-1">arium</span>-->
+                <img class="h-10" src="{angariumLogo}"/>
             </a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
+                <li><a href="../upload">Hochladen</a></li>
+                <li><a href="../download">Herunterladen</a></li>
                 <li><a href="../my-files">Meine Dokumente</a></li>
-                <li><a href="../upload">Upload</a></li>
-                <li><a href="../download">Download</a></li>
                 <li><a href="../admin">Benutzer Verwaltung</a></li>
                 <!--<li>
                     <details>
