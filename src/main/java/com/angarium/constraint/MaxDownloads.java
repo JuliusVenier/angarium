@@ -1,6 +1,5 @@
 package com.angarium.constraint;
 
-import com.angarium.constraint.validator.MaxDaysValidator;
 import com.angarium.constraint.validator.MaxDownloadsValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

@@ -1,7 +1,10 @@
 package com.angarium.service;
 
 import com.angarium.entity.UserEntity;
-import com.angarium.model.*;
+import com.angarium.model.NewStandardUserModel;
+import com.angarium.model.NewUserModel;
+import com.angarium.model.UpdateUserModel;
+import com.angarium.model.UserModel;
 import com.angarium.repository.UserRepository;
 import com.angarium.utils.converter.UserConverter;
 import io.quarkus.elytron.security.common.BcryptUtil;

@@ -1,6 +1,8 @@
 package com.angarium.web;
 
-import com.angarium.model.*;
+import com.angarium.model.NewStandardUserModel;
+import com.angarium.model.UpdateUserModel;
+import com.angarium.model.UserModel;
 import com.angarium.service.UserService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;

@@ -2,7 +2,6 @@ package com.angarium.repository;
 
 import com.angarium.entity.FileMetaDataEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
-import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.jbosslog.JBossLog;
 

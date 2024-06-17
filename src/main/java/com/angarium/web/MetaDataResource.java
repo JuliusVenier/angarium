@@ -1,6 +1,5 @@
 package com.angarium.web;
 
-import com.angarium.entity.FileMetaDataEntity;
 import com.angarium.model.FileMetaDataModel;
 import com.angarium.service.FileService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
