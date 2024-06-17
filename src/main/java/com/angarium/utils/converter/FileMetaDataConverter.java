@@ -49,6 +49,12 @@ public class FileMetaDataConverter {
                 .build();
     }
 
+    /**
+     * Berechnet die maximale Anzahl von Downloads für die Datei.
+     *
+     * @param newFileMetaDataModel Das Modell mit den neuen Dateimetadaten.
+     * @return Die maximale Anzahl von Downloads.
+     */
     private int calcMaxDays(NewFileMetaDataModel newFileMetaDataModel){
         if (newFileMetaDataModel.getMaxDays() == null){
             return defaultDays;
@@ -57,6 +63,12 @@ public class FileMetaDataConverter {
         return newFileMetaDataModel.getMaxDays();
     }
 
+    /**
+     * Berechnet die maximale Anzahl von Downloads für die Datei.
+     *
+     * @param newFileMetaDataModel Das Modell mit den neuen Dateimetadaten.
+     * @return Die maximale Anzahl von Downloads.
+     */
     private int calcMaxDownloads(NewFileMetaDataModel newFileMetaDataModel){
         if (newFileMetaDataModel.getMaxDays() == null){
             return defaultDownloads;

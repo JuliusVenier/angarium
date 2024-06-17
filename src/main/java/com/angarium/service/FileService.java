@@ -27,6 +27,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Die FileService-Klasse bietet Funktionen zum Hochladen, Herunterladen und Löschen von Dateien.
+ * Sie verwaltet außerdem die Datei-Metadaten und überwacht die Download-Limits.
+ */
 @ApplicationScoped
 @RequiredArgsConstructor
 @JBossLog
@@ -41,6 +45,14 @@ public class FileService {
     @Context
     SecurityContext securityContext;
 
+    /**
+     * Lädt eine neue Datei hoch und speichert die Metadaten.
+     *
+     * @param newFileMetaDataModel Die Metadaten der hochzuladenden Datei.
+     * @param file Die Datei, die hochgeladen werden soll.
+     * @return Ein Modell, das die ID der hochgeladenen Datei enthält.
+     * @throws IOException Wenn ein Fehler beim Verschieben der Datei auftritt.
+     */
     @Transactional
     public FileIdModel upload(NewFileMetaDataModel newFileMetaDataModel, File file) throws IOException {
         UserEntity userEntity =  userRepository.findUserByUsername(securityContext.getUserPrincipal().getName());
@@ -51,12 +63,26 @@ public class FileService {
         return new FileIdModel(fileMetaDataEntity.getId().toString());
     }
 
+    /**
+     * Verschiebt eine Datei in das Zielverzeichnis.
+     *
+     * @param file Die Datei, die verschoben werden soll.
+     * @param fileId Die ID der Datei.
+     * @throws IOException Wenn ein Fehler beim Verschieben der Datei auftritt.
+     */
     private void moveFile(File file, String fileId) throws IOException {
         Path target = Paths.get(fileDir, fileId);
         Files.createDirectories(target.getParent());
         Files.move(file.toPath(), target);
     }
 
+    /**
+     * Lädt eine Datei herunter und aktualisiert die Download-Zähler.
+     *
+     * @param fileId Die ID der herunterzuladenden Datei.
+     * @return Ein Modell, das die Datei und ihre Metadaten enthält.
+     * @throws IOException Wenn ein Fehler beim Herunterladen der Datei auftritt.
+     */
     @Transactional(dontRollbackOn = FileDownloadLimitsReachedException.class)
     public DownloadModel download(String fileId) throws IOException {
         FileMetaDataEntity fileMetaDataEntity = findFileMetaData(fileId);
@@ -77,6 +103,11 @@ public class FileService {
         return new DownloadModel(new File(Paths.get(fileDir, fileId).toUri()), fileMetaDataModel);
     }
 
+    /**
+     * Überprüft die Download-Limits einer Datei.
+     *
+     * @param fileMetaDataEntity Die Metadaten der Datei.
+     */
     private void checkFileDownloadLimits(FileMetaDataEntity fileMetaDataEntity) {
         if(fileMetaDataEntity.getCurrentDownloads() >= fileMetaDataEntity.getMaxDownloads()){
             throw new FileDownloadLimitsReachedException("Maximum number of downloads has been reached");
@@ -87,6 +118,11 @@ public class FileService {
         }
     }
 
+    /**
+     * Löscht Dateien, die ihr Download-Limit erreicht haben.
+     *
+     * @throws IOException Wenn ein Fehler beim Löschen der Datei auftritt.
+     */
     @Transactional
     public void deleteFilesThatHaveReachedTheirLimit() throws IOException {
         List<FileMetaDataEntity> entities = fileMetaDataRepository.findFilesThatHaveReachedTheirLimits();
@@ -97,11 +133,23 @@ public class FileService {
         }
     }
 
+    /**
+     * Löscht eine Datei.
+     *
+     * @param fileId Die ID der Datei, die gelöscht werden soll.
+     * @throws IOException Wenn ein Fehler beim Löschen der Datei auftritt.
+     */
     public void deleteFile(UUID fileId) throws IOException {
         Files.deleteIfExists(Paths.get(fileDir, fileId.toString()));
         fileMetaDataRepository.deleteFileMetaDataByUUID(fileId);
     }
 
+    /**
+     * Findet die Metadaten einer Datei anhand ihrer ID.
+     *
+     * @param fileId Die ID der Datei.
+     * @return Die Metadaten der Datei.
+     */
     private FileMetaDataEntity findFileMetaData(String fileId) {
         return fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
     }
@@ -110,6 +158,12 @@ public class FileService {
         return fileMetaDataConverter.toFileMetaDataModel(findFileMetaData(fileId));
     }
 
+
+    /**
+     * Ruft die Dateien des aktuellen Benutzers ab.
+     *
+     * @return Eine Liste von Modellen, die die Metadaten der Dateien des Benutzers enthalten.
+     */
     public List<FileMetaDataModel> getMyFiles() {
         return fileMetaDataRepository.findFilesByUsername(securityContext.getUserPrincipal().getName()).stream()
                 .map(fileMetaDataConverter::toFileMetaDataModel)
