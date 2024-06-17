@@ -4,6 +4,7 @@ import com.angarium.model.*;
 import com.angarium.service.UserService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -11,9 +12,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Path("/api/user")
 public class UserResource {
@@ -38,8 +41,8 @@ public class UserResource {
     @Path("/me/update")
     @RunOnVirtualThread
     @RolesAllowed({"admin", "user"})
-    public void updateUser(UpdateUserModel updateUserModel){
-        userService.updateUser(updateUserModel);
+    public UserModel updateUser(UpdateUserModel updateUserModel){
+        return userService.updateUser(updateUserModel);
     }
 
     @GET
@@ -53,7 +56,7 @@ public class UserResource {
     @POST
     @RunOnVirtualThread
     @RolesAllowed("admin")
-    public UserModel createStandardUser(NewStandardUserModel newStandardUserModel){
+    public UserModel createStandardUser(@Valid NewStandardUserModel newStandardUserModel){
         return userService.createStandardUser(newStandardUserModel);
     }
 
@@ -69,8 +72,8 @@ public class UserResource {
     @Path("/reset/{id}")
     @RunOnVirtualThread
     @RolesAllowed("admin")
-    public void resetUserPassword(Long id){
-        userService.resetUserPassword(id);
+    public UserModel resetUserPassword(Long id){
+        return userService.resetUserPassword(id);
     }
 
 }
