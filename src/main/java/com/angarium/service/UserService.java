@@ -15,6 +15,13 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.util.List;
 
+/**
+ * UserService stellt verschiedene Methoden zur Verwaltung von Benutzern bereit.
+ * Diese Klasse ist für die Erstellung, Löschung, Aktualisierung und Suche von Benutzern zuständig.
+ * Sie verwendet UserRepository für den Datenbankzugriff und UserConverter für die Umwandlung zwischen
+ * Entitäten und Modellen.
+ *
+ */
 @ApplicationScoped
 @RequiredArgsConstructor
 public class UserService {
@@ -27,10 +34,11 @@ public class UserService {
     @Context
     SecurityContext securityContext;
 
-    /*
-     * Erstellt einen neuen Standard Benutzer
+    /**
+     * Erstellt einen neuen Standardbenutzer.
      *
-     * @param username Der Name des neuen Benutzers
+     * @param newStandardUserModel Das Modell, das die Informationen des neuen Standardbenutzers enthält.
+     * @return Ein UserModel-Objekt, das die Informationen des erstellten Benutzers enthält.
      * @throws IllegalArgumentException Wenn ein Benutzer mit dem gleichen Benutzernamen bereits existiert.
      */
     public UserModel createStandardUser(NewStandardUserModel newStandardUserModel){
@@ -53,14 +61,16 @@ public class UserService {
         return userConverter.toUserModel(user);
     }
 
-    /*
-     * TODO
+    /**
+     * Löscht einen Benutzer anhand seiner ID.
      *
+     * @param id Die ID des zu löschenden Benutzers.
      */
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
     /**
      * Sucht nach einem Benutzer anhand seines Benutzernamens.
      *
@@ -72,6 +82,11 @@ public class UserService {
         return userConverter.toUserModel(userRepository.findUserByUsername(username));
     }
 
+    /**
+     * Gibt eine Liste aller Benutzer zurück.
+     *
+     * @return Eine Liste von UserModel-Objekten, die die Informationen aller Benutzer enthalten.
+     */
     public List<UserModel> listAllUsers() {
         return userRepository.listAll().stream()
                 .map(userConverter::toUserModel)
@@ -88,9 +103,10 @@ public class UserService {
         return userRepository.findUserByUsername(username) != null;
     }
 
-    /*
-     * TODO
+    /**
+     * Setzt das Passwort eines Benutzers zurück.
      *
+     * @param id Die ID des Benutzers, dessen Passwort zurückgesetzt werden soll.
      */
     @Transactional
     public void resetUserPassword(Long id) {
@@ -100,6 +116,11 @@ public class UserService {
         userRepository.persist(userEntity);
     }
 
+    /**
+     * Aktualisiert die Informationen eines Benutzers.
+     *
+     * @param updateUserModel Das Modell, das die neuen Informationen des Benutzers enthält.
+     */
     public void updateUser(UpdateUserModel updateUserModel) {
         UserEntity userEntity = userRepository.findUserByUsername(securityContext.getUserPrincipal().getName());
         userEntity.setUsername(updateUserModel.getUsername());

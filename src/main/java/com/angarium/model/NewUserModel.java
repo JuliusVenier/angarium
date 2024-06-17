@@ -2,6 +2,7 @@ package com.angarium.model;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
 /**
  * Diese Klasse repräsentiert einen neuen Benutzer im System.
  *

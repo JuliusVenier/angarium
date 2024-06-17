@@ -59,12 +59,12 @@ public class FileMetaDataEntity {
     private LocalDate deletionDate;
 
     /**
-     * TODO
+     * Der Hash von der unverschlüsselten Datei
      */
     private String sha256;
 
     /**
-     * TODO
+     * Zeigt an ob die Datei verschlüsselt ist
      */
     private boolean encrypted;
 

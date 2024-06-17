@@ -44,12 +44,12 @@ public class FileMetaDataModel {
     private final LocalDate deletionDate;
 
     /**
-     * TODO
+     * Der Hash einer unverschlüsselten Datei
      */
     private final String sha256;
 
     /**
-     * TODO
+     * Zeigt an ob die Datei verschlüsselt ist
      */
     private final boolean encrypted;
 
