@@ -8,9 +8,12 @@ _() {
   local upload_url="http://localhost:8080/api/upload/test"
 
   echo "#### Performance test for the upload endpoint ####"
+
+  # Erstellen der Testdatei mit einer Größe von 10 MB
   echo "Creating the test file"
   dd if=/dev/zero of=$test_file bs=1M count=10 status=none
 
+  # Abrufen des Authentifizierungs-Cookies
   echo "Retrieving the authentication cookie"
   cookie=$(curl -s -i -X POST http://localhost:8080/j_security_check \
       -H "Content-Type: application/x-www-form-urlencoded" \
@@ -19,6 +22,7 @@ _() {
 
   echo "Cookie: $cookie"
 
+  # Schreiben des Lua-Skripts zur Verwendung mit wrk
   echo "Writing the Lua script"
   echo "
   local function read_file(path)
@@ -34,6 +38,7 @@ _() {
   wrk.headers[\"Cookie\"] = \"$cookie\"
   " > $lua_file
 
+  # Ausführen des Performance-Tests mit wrk
   wrk -t10 -c100 -d10s -s $lua_file $upload_url
 
   rm $test_file
