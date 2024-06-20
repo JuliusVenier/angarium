@@ -1,12 +1,12 @@
 <script>
-    import Icon from "./+icon.svelte";
+    import { Icon } from 'svelte-icons-pack';
 
-    export let type;
+    export let icon;
     export let text;
-    export let showIcon = false;
+    export let fg_color;
+    export let bg_color
 </script>
 <style>
-
     .label {
         @apply alert;
         @apply h-12;
@@ -16,24 +16,11 @@
         @apply justify-center;
 
     }
-
-    .label-success {
-        @apply alert-success;
-    }
-
-    .label-warning {
-        @apply alert-warning;
-    }
-
-    .label-error {
-        @apply alert-error;
-    }
-
 </style>
 
-<div class="label label-{type}">
-    {#if showIcon}
-        <Icon icon={type} bgColor={false}/>
+<div class="label">
+    {#if icon !== null && icon !== undefined}
+        <Icon src={icon} size="32"/>
     {/if}
     <span>{text}</span>
 </div>

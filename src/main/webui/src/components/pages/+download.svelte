@@ -1,9 +1,10 @@
 <script>
-    import Label from "../components/shared/info/+label.svelte"
+    import Label from "../shared/info/+label.svelte"
 
     import { onMount } from "svelte";
-    import { convertArrayBufferToHex, hashFile, decryptFile } from "$lib/cryptography.js";
-    import { createMessage, encrypt, decrypt, readMessage } from "openpgp";
+    import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
+    import { convertArrayBufferToHex, hashFile } from "$lib/cryptography.js";
+    import { decrypt, readMessage } from "openpgp";
 
     export let id;
     let validID = undefined;
@@ -153,7 +154,7 @@
         </div>
     </div>
 </div>
-{#if true}
+{#if $isDev}
     <div id="dev-tools" class="fixed right-4 top-20 flex flex-col gap-2">
         <div class="flex flex-row flex-wrap items-center justify-end gap-2">
             <span>validID</span>

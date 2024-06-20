@@ -41,13 +41,10 @@
     import Login from '../components/+login.svelte';
     import User_Avatar from '../components/+user_avatar.svelte';
     import {onMount} from 'svelte';
-    
-    let authenticated = false;
-    onMount(() => {
-        let cookie = document.cookie;
-        if (cookie.includes("quarkus-credential")) {
-            authenticated = true;
-        }
+    import { authenticateUser, isAuthenticated, user, isDev, user_roles  } from '$lib/user.js';
+
+    onMount(async () => {
+        await authenticateUser();
     });
 
     let openedLogout = false;
@@ -71,15 +68,21 @@
             <a class="text-xl flex flex-row justify-center" href="../">
                 <!--<span class="font-bold bg-accent text-accent-content pb-1 pl-1 rounded">ang</span>
                 <span class="pb-1">arium</span>-->
-                <img class="h-10" src="{angariumLogo}"/>
+                <img class="h-10" src="{angariumLogo}" alt="angarium"/>
             </a>
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                <li><a href="../upload">Hochladen</a></li>
-                <li><a href="../download">Herunterladen</a></li>
-                <li><a href="../my-files">Meine Dokumente</a></li>
-                <li><a href="../admin">Benutzer Verwaltung</a></li>
+                {#if $isAuthenticated && $user.role === user_roles.admin}
+                    <li><a href="../download">Herunterladen</a></li>
+                    <li><a href="../admin">Benutzer Verwaltung</a></li>
+                {:else if $isAuthenticated && $user.role === user_roles.user}
+                    <li><a href="../upload">Hochladen</a></li>
+                    <li><a href="../download">Herunterladen</a></li>
+                    <li><a href="../my-files">Meine Dateien</a></li>
+                {:else}
+                    <li><a href="../download">Herunterladen</a></li>
+                {/if}
                 <!--<li>
                     <details>
                         <summary>Parent</summary>
@@ -92,12 +95,12 @@
             </ul>
         </div>
         <div class="navbar-end">
-            <User_Avatar authenticated={authenticated} on:openLogin={openLogin} on:logout={logout}/>
+            <User_Avatar on:openLogin={openLogin} on:logout={logout}/>
         </div>
     </div>
     <div class="divider-layout"></div>
     <div class="content-container">
-        <slot />
+            <slot />
     </div>
 </div>
 {#if showLogin}
