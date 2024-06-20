@@ -3,6 +3,7 @@
 _() {
   local username="default"
   local password="password"
+  local auth_url="http://localhost:8080/j_security_check"
   local test_file="testfile"
   local lua_file="upload.lua"
   local upload_url="http://localhost:8080/api/upload/test"
@@ -15,7 +16,7 @@ _() {
 
   # Abrufen des Authentifizierungs-Cookies
   echo "Retrieving the authentication cookie"
-  cookie=$(curl -s -i -X POST http://localhost:8080/j_security_check \
+  cookie=$(curl -s -i -X POST $auth_url \
       -H "Content-Type: application/x-www-form-urlencoded" \
       -d "j_username=$username" \
       -d "j_password=$password" | grep -i 'Set-Cookie' | awk '{print $2}' | tr -d ';')
