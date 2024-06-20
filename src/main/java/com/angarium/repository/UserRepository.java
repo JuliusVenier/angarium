@@ -4,8 +4,9 @@ import com.angarium.entity.UserEntity;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.List;
-
+/**
+ * Repository-Klasse zur Verwaltung von Benutzern in der Datenbank.
+ */
 @ApplicationScoped
 public class UserRepository implements PanacheRepository<UserEntity> {
 

@@ -3,7 +3,6 @@ package com.angarium;
 import com.angarium.service.FileService;
 import io.quarkus.scheduler.Scheduled;
 import jakarta.enterprise.context.ApplicationScoped;
-import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 

@@ -4,13 +4,11 @@ import com.angarium.model.DownloadModel;
 import com.angarium.service.FileService;
 import io.smallrye.common.annotation.RunOnVirtualThread;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 
-import java.io.File;
 import java.io.IOException;
 
 @Path("/api/download")

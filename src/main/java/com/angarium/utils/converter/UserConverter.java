@@ -5,8 +5,6 @@ import com.angarium.model.NewUserModel;
 import com.angarium.model.UserModel;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 @ApplicationScoped
