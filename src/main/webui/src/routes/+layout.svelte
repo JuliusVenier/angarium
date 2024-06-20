@@ -104,7 +104,7 @@
     </div>
 </div>
 {#if showLogin}
-    <div class="login-window border-2">
+    <div class="login-window border-2 min-w-80">
         <Login isLoading={openedLogout} on:closeClick={closeLogin}/>
     </div>
     <div class="h-screen w-screen absolute top-0 left-0 z-10 bg-base-100 opacity-70"></div>

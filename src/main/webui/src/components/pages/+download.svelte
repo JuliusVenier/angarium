@@ -1,6 +1,13 @@
 <script>
     import Label from "../shared/info/+label.svelte"
 
+    // Icon imports ---------------------------------------
+    import { Icon } from 'svelte-icons-pack';
+    import { SlClose } from "svelte-icons-pack/sl";
+    import { SlCheck } from "svelte-icons-pack/sl";
+    import { RiSystemErrorWarningLine } from "svelte-icons-pack/ri";
+    //-----------------------------------------------------
+
     import { onMount } from "svelte";
     import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
     import { convertArrayBufferToHex, hashFile } from "$lib/cryptography.js";
@@ -122,7 +129,7 @@
     }
 </script>
 <div class="flex flex-col h-full w-full items-center justify-center">
-    <div class="flex flex-col w-1/5 gap-4">
+    <div class="flex flex-col w-1/5 gap-4 min-w-80">
         <div class="flex flex-row gap-4 items-center w-full">
             <input type="text" placeholder="Download ID" class="input input-bordered w-full" bind:value={id} on:input={checkFileID}/>
         </div>
@@ -141,13 +148,21 @@
             {#if validID !== undefined}
                 <div>
                     {#if !validID}
-                        <Label type={"error"} text={"File existiert nicht"} showIcon={true}  />
+                        <Label color={"error"} text={"File existiert nicht"}>
+                            <Icon src={SlClose} size="32" slot="icon"/>
+                        </Label>
                     {:else if maxDownloadsReached}
-                        <Label type={"error"} text={"Maximale downloads erreicht!"} showIcon={true}  />
+                        <Label color={"error"} text={"Maximale downloads erreicht!"}>
+                            <Icon src={SlClose} size="32" slot="icon"/>
+                        </Label>
                     {:else if isEncrypted && !canDownload}
-                        <Label type={"warning"} text={"Passwort erforderlich"} showIcon={true}  />
+                        <Label color={"warning"} text={"Passwort erforderlich"}>
+                            <Icon src={RiSystemErrorWarningLine} size="32" slot="icon"/>
+                        </Label>
                     {:else if validID}
-                        <Label type={"success"} text={"File existiert"} showIcon={true}  />
+                        <Label color={"success"} text={"File existiert"}>
+                            <Icon src={SlCheck} size="32" slot="icon"/>
+                        </Label>
                     {/if}
                 </div>
             {/if}

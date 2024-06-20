@@ -2,6 +2,7 @@
     import { onMount } from "svelte";
     import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
     import FilterList from '../shared/+filterList.svelte';
+    import {goto} from '$app/navigation';
 
     // Icon imports ---------------------------------------
     import { Icon } from 'svelte-icons-pack';
@@ -92,14 +93,14 @@
             <th class="downloads"><div class="tooltip tooltip-bottom" data-tip="Anzahl Downloads / maximale Downloads"><Icon src={CgSoftwareDownload} size="32" /></div></th>
             <th class="encrypted"></th>
             <th></th>
-            <th><div><button class="btn btn-outline btn-accent p-2 min-h-0 h-fit tooltip tooltip-top tooltip-accent" data-tip="Datei hochladen" on:click={() => { window.location.href="/upload" }}><Icon src={CgSoftwareUpload} size="32"/></button></div></th>
+            <th><div><button class="btn btn-outline btn-accent p-2 min-h-0 h-fit tooltip tooltip-top tooltip-accent" data-tip="Datei hochladen" on:click={() => { goto('/upload'); }}><Icon src={CgSoftwareUpload} size="32"/></button></div></th>
             <th></th>
         </tr>
         <tr class="row" style="height: 200px" slot="empty" class:hidden={fileList !== null && fileList !== undefined && fileList.length > 0}>
             <td colspan="8">
                 <div class="flex flex-col items-center justify-center gap-4 w-full">
                     <span>Zur Zeit sind keine Dateien vorhanden</span>
-                    <button class="btn btn-outline btn-accent p-2 min-h-0 h-fit" on:click={() => { window.location.href="/upload" }}>Datei hochladen</button>
+                    <button class="btn btn-outline btn-accent p-2 min-h-0 h-fit" on:click={() => { goto('/upload'); }}>Datei hochladen</button>
                 </div>
             </td>
         </tr>

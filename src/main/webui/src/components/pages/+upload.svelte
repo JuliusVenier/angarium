@@ -12,7 +12,7 @@
     let fileName;
     let fileExtension;
 
-    let timeAvailable;
+    let timeAvailable = 1;
     let maxDownloadCnt;
 
     let usePassword = false;

@@ -1,10 +1,6 @@
 <script>
-    import { Icon } from 'svelte-icons-pack';
-
-    export let icon;
     export let text;
-    export let fg_color;
-    export let bg_color
+    export let color;
 </script>
 <style>
     .label {
@@ -14,13 +10,22 @@
         @apply flex;
         @apply flex-row;
         @apply justify-center;
+    }
 
+    .label-success {
+        @apply text-white;
+        @apply bg-success;
+    }
+    .label-warning {
+        @apply text-white;
+        @apply bg-warning;
+    }
+    .label-error{
+        @apply text-white;
+        @apply bg-error;
     }
 </style>
-
-<div class="label">
-    {#if icon !== null && icon !== undefined}
-        <Icon src={icon} size="32"/>
-    {/if}
+<div class="label label-{color}">
+    <slot name="icon"/>
     <span>{text}</span>
 </div>
