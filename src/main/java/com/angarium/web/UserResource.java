@@ -20,7 +20,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Path("/api/user")
+@Path("/user")
 public class UserResource {
 
     private final UserService userService;

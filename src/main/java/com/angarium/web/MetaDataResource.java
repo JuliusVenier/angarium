@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@Path("/api/meta-data")
+@Path("/meta-data")
 @RequiredArgsConstructor
 public class MetaDataResource {
     private final FileService fileService;

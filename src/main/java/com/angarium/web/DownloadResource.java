@@ -11,7 +11,7 @@ import lombok.extern.jbosslog.JBossLog;
 
 import java.io.IOException;
 
-@Path("/api/download")
+@Path("/download")
 @JBossLog
 @RequiredArgsConstructor
 public class DownloadResource {

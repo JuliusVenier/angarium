@@ -15,7 +15,7 @@ import lombok.extern.jbosslog.JBossLog;
 import java.io.File;
 import java.io.IOException;
 
-@Path("/api/upload")
+@Path("/upload")
 @JBossLog
 @RequiredArgsConstructor
 public class UploadResource {
