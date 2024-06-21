@@ -1,4 +1,5 @@
 <script>
+    import {returnToIndex} from "$lib/user.js";
     import {createEventDispatcher} from "svelte";
     import { onMount } from "svelte";
 
@@ -62,7 +63,9 @@
     }
 
     function reloadSite() {
-        setTimeout(() => { location.reload(); }, 1000);
+        setTimeout(() => {
+            returnToIndex();
+        }, 1000);
     }
 
 </script>
