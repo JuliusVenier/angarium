@@ -19,9 +19,9 @@
     }
 </style>
 <script>
-    import { onMount } from "svelte";
-    import { isAuthenticated, user } from "$lib/user.js";
-    import {createEventDispatcher} from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
+    import {isAuthenticated, user} from "$lib/user.js";
+
     const dispatch = createEventDispatcher();
 
     let avatar;

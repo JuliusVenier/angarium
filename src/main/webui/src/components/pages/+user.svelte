@@ -1,6 +1,6 @@
 <script>
-    import { onMount } from "svelte";
-    import { isAuthenticated, user, isDev } from "$lib/user.js";
+    import {onMount} from "svelte";
+    import {isDev, user} from "$lib/user.js";
 
     onMount(async () => {
         username = $user.username;

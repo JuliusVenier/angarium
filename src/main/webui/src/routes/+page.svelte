@@ -1,6 +1,6 @@
 <script>
-    import { onMount } from "svelte";
-    import { authenticateUser, isAuthenticated, user, user_roles } from "$lib/user.js";
+    import {onMount} from "svelte";
+    import {authenticateUser, isAuthenticated, user, user_roles} from "$lib/user.js";
 
     import My_Files from "../components/pages/+my-files.svelte";
     import Admin from "../components/pages/+admin.svelte";

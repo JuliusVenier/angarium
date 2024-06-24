@@ -1,6 +1,6 @@
 <script>
-    import { onMount } from "svelte";
-    import { authenticateUser, isAuthenticated, returnToIndex} from "$lib/user.js";
+    import {onMount} from "svelte";
+    import {authenticateUser, isAuthenticated, returnToIndex} from "$lib/user.js";
 
     import User from "../../components/pages/+user.svelte"
 

@@ -2,16 +2,14 @@
     import Label from "../shared/info/+label.svelte"
 
     // Icon imports ---------------------------------------
-    import { Icon } from 'svelte-icons-pack';
-    import { SlClose } from "svelte-icons-pack/sl";
-    import { SlCheck } from "svelte-icons-pack/sl";
-    import { RiSystemErrorWarningLine } from "svelte-icons-pack/ri";
+    import {Icon} from 'svelte-icons-pack';
+    import {SlCheck, SlClose} from "svelte-icons-pack/sl";
+    import {RiSystemErrorWarningLine} from "svelte-icons-pack/ri";
     //-----------------------------------------------------
-
-    import { onMount } from "svelte";
-    import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
-    import { convertArrayBufferToHex, hashFile } from "$lib/cryptography.js";
-    import { decrypt, readMessage } from "openpgp";
+    import {onMount} from "svelte";
+    import {isDev} from "$lib/user.js";
+    import {convertArrayBufferToHex, hashFile} from "$lib/cryptography.js";
+    import {decrypt, readMessage} from "openpgp";
 
     export let id;
     let validID = undefined;

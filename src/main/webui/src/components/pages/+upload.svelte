@@ -1,11 +1,10 @@
 <script>
     import {onMount} from "svelte";
-    import { hashFile, convertArrayBufferToHex} from "$lib/cryptography.js";
-    import { createMessage, encrypt } from "openpgp";
-    import { isAuthenticated, user,  isDev } from "$lib/user.js";
+    import {convertArrayBufferToHex, hashFile} from "$lib/cryptography.js";
+    import {createMessage, encrypt} from "openpgp";
 
-    import { Icon } from 'svelte-icons-pack';
-    import { TrOutlineTrashX } from "svelte-icons-pack/tr";
+    import {Icon} from 'svelte-icons-pack';
+    import {TrOutlineTrashX} from "svelte-icons-pack/tr";
 
     let fileInput;
     let isFileSelected = false;
