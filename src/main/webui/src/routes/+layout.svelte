@@ -41,7 +41,7 @@
     import Login from '../components/+login.svelte';
     import User_Avatar from '../components/+user_avatar.svelte';
     import {onMount} from 'svelte';
-    import { authenticateUser, isAuthenticated, user, isDev, user_roles  } from '$lib/user.js';
+    import {authenticateUser, isAuthenticated, user, user_roles} from '$lib/user.js';
 
     onMount(async () => {
         await authenticateUser();

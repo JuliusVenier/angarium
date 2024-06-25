@@ -1,7 +1,6 @@
 <script>
     import {returnToIndex} from "$lib/user.js";
-    import {createEventDispatcher} from "svelte";
-    import { onMount } from "svelte";
+    import {createEventDispatcher, onMount} from "svelte";
 
     let window;
     const dispatch = createEventDispatcher();

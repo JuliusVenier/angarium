@@ -1,16 +1,14 @@
 <script>
-    import { onMount } from "svelte";
-    import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
+    import {onMount} from "svelte";
+    import {isDev} from "$lib/user.js";
     import FilterList from '../shared/+filterList.svelte';
     import {goto} from '$app/navigation';
 
     // Icon imports ---------------------------------------
-    import { Icon } from 'svelte-icons-pack';
-    import { TrOutlineTrashX } from "svelte-icons-pack/tr";
-    import { CgSoftwareUpload } from "svelte-icons-pack/cg";
-    import { AiOutlineLink } from "svelte-icons-pack/ai";
-    import { TrOutlineLock } from "svelte-icons-pack/tr";
-    import { CgSoftwareDownload } from "svelte-icons-pack/cg";
+    import {Icon} from 'svelte-icons-pack';
+    import {TrOutlineLock, TrOutlineTrashX} from "svelte-icons-pack/tr";
+    import {CgSoftwareDownload, CgSoftwareUpload} from "svelte-icons-pack/cg";
+    import {AiOutlineLink} from "svelte-icons-pack/ai";
     //-----------------------------------------------------
 
     const dateOptions = { year: "numeric", month: "2-digit", day: "2-digit" };

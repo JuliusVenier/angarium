@@ -1,6 +1,6 @@
 <script>
     import {onMount} from "svelte";
-    import {authenticateUser, returnToIndex, isAuthenticated, user} from "$lib/user.js";
+    import {authenticateUser, isAuthenticated, returnToIndex, user} from "$lib/user.js";
     import Upload from "../../components/pages/+upload.svelte";
 
     onMount(async () => {

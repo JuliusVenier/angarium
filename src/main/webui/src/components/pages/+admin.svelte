@@ -1,16 +1,16 @@
 <script>
-    import {isAuthenticated, user, isDev, user_roles} from "$lib/user.js";
+    import {isDev, user} from "$lib/user.js";
     import {onMount} from "svelte";
     import FilterList from '../shared/+filterList.svelte';
     import Modal from '../shared/info/+modal.svelte'
 
     // Icon imports ---------------------------------------
-    import { Icon } from 'svelte-icons-pack';
-    import { TrOutlineTrashX } from "svelte-icons-pack/tr";
-    import { SlReload } from "svelte-icons-pack/sl";
-    import { AiOutlineUserAdd } from "svelte-icons-pack/ai";
-    import { CgClose } from "svelte-icons-pack/cg";
-    import { RiDeviceSave3Line } from "svelte-icons-pack/ri";
+    import {Icon} from 'svelte-icons-pack';
+    import {TrOutlineTrashX} from "svelte-icons-pack/tr";
+    import {SlReload} from "svelte-icons-pack/sl";
+    import {AiOutlineUserAdd} from "svelte-icons-pack/ai";
+    import {CgClose} from "svelte-icons-pack/cg";
+    import {RiDeviceSave3Line} from "svelte-icons-pack/ri";
     //-----------------------------------------------------
 
     let newUserItem_exists = false;
