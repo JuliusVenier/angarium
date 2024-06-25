@@ -4,4 +4,6 @@
 
     const paramID = $page.url.searchParams.get("id");
 </script>
-<Download id={paramID}/>
+<div class="flex justify-center overflow-y-auto h-full py-14">
+    <Download id={paramID}/>
+</div>

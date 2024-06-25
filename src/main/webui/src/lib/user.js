@@ -6,7 +6,7 @@ export const user_roles = {
     user: "user"
 };
 
-export const isDev = readable(true);
+export const isDev = readable(false);
 export const isAuthenticated = writable(false);
 export const user = writable({
     id: null,

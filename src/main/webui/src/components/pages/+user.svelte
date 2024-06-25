@@ -1,12 +1,7 @@
 <script>
-    import { onMount } from "svelte";
     import { isAuthenticated, user, isDev } from "$lib/user.js";
 
-    onMount(async () => {
-        username = $user.username;
-    });
-
-    let username;
+    export let username;
     let oldPassword;
     let changePassword;
     let newPassword;
@@ -74,30 +69,28 @@
         //Old Password is wrong
     }
 </script>
-<div class="flex flex-col h-full w-full items-center justify-center">
-    <div class="flex flex-col w-1/5 min-w-80 gap-4">
-        {#if $user.role === "admin"}
-            <div class="flex-fit badge badge-accent badge-outline">admin</div>
-        {/if}
-        <div class="flex flex-row gap-4 items-center w-full">
-            <span>Benutzername</span>
-            <input type="text" class="input input-bordered w-full" bind:value={username}/>
-        </div>
-        {#if username !== $user.username}
-            <span class="text-warning">alter Benutzername: {$user.username}</span>
-        {/if}
-        <div></div>
-        <input type="password" placeholder="altes Passwort" class="input input-bordered w-full" bind:value={oldPassword}/>
-        <div class="flex flex-row gap-4 items-center w-full">
-            <span>Passwort ändern</span>
-            <input type="checkbox" class="checkbox checkbox-accent" bind:checked={changePassword} />
-        </div>
-        {#if changePassword}
-            <input type="password" placeholder="neues Passwort" class="input input-bordered w-full" bind:value={newPassword}/>
-            <input type="password" placeholder="Passwort wiederholen" class="input input-bordered w-full" bind:value={checkNewPassword}/>
-        {/if}
-        <button class="btn btn-accent btn-outline" on:click={changeUserData}>Anmeldedaten ändern</button>
+<div class="flex flex-col w-1/5 min-w-80 gap-4 h-fit my-auto">
+    {#if $user.role === "admin"}
+        <div class="flex-fit badge badge-accent badge-outline">admin</div>
+    {/if}
+    <div class="flex flex-row gap-4 items-center w-full">
+        <span>Benutzername</span>
+        <input type="text" class="input input-bordered w-full" bind:value={username}/>
     </div>
+    {#if username !== $user.username}
+        <span class="text-warning">alter Benutzername: {$user.username}</span>
+    {/if}
+    <div></div>
+    <input type="password" placeholder="altes Passwort" class="input input-bordered w-full" bind:value={oldPassword}/>
+    <div class="flex flex-row gap-4 items-center w-full">
+        <span>Passwort ändern</span>
+        <input type="checkbox" class="checkbox checkbox-accent" bind:checked={changePassword} />
+    </div>
+    {#if changePassword}
+        <input type="password" placeholder="neues Passwort" class="input input-bordered w-full" bind:value={newPassword}/>
+        <input type="password" placeholder="Passwort wiederholen" class="input input-bordered w-full" bind:value={checkNewPassword}/>
+    {/if}
+    <button class="btn btn-accent btn-outline" on:click={changeUserData}>Anmeldedaten ändern</button>
 </div>
 {#if $isDev}
     <div id="dev-tools" class="fixed right-4 top-20 flex flex-col gap-2">

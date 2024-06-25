@@ -128,7 +128,7 @@
         link.click();
     }
 </script>
-<div class="flex flex-col h-full w-full items-center justify-center">
+<div class="flex flex-col h-fit my-auto w-full items-center">
     <div class="flex flex-col w-1/5 gap-4 min-w-80">
         <div class="flex flex-row gap-4 items-center w-full">
             <input type="text" placeholder="Download ID" class="input input-bordered w-full" bind:value={id} on:input={checkFileID}/>
@@ -141,7 +141,7 @@
         {:else}
             <button class="btn btn-outline btn-disabled">Datei herunterladen</button>
         {/if}
-        <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center gap-4" class:hidden={filename === undefined && validID === undefined}>
             {#if filename !== undefined}
                 <span>{filename}</span>
             {/if}

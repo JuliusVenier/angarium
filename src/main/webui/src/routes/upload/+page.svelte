@@ -9,5 +9,9 @@
             returnToIndex();
         }
     });
+
+    let scrollElement;
 </script>
-<Upload />
+<div class="flex justify-center overflow-y-auto h-full py-14" bind:this={scrollElement}>
+    <Upload scrollContainer={scrollElement} />
+</div>
