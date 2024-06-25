@@ -5,7 +5,10 @@
     import { isAuthenticated, user,  isDev } from "$lib/user.js";
 
     import { Icon } from 'svelte-icons-pack';
+    import { AiOutlineUp } from "svelte-icons-pack/ai";
+    import { AiOutlineDown } from "svelte-icons-pack/ai";
     import { TrOutlineTrashX } from "svelte-icons-pack/tr";
+    import { SlCheck } from "svelte-icons-pack/sl";
 
     let fileInput;
     let isFileSelected = false;
