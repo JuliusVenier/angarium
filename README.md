@@ -8,4 +8,4 @@ Durch diesen Ansatz sollen die Nutzer die volle Kontrolle über ihre Daten behal
 - [angarium-desktop](https://github.com/JuliusVenier/angarium-desktop)
 
 ## Dokumentation
-Die Quellcode-Dokumentation und die Schnittstellen-Dokumentation finden Sie auf dieser Seite [Seite](https://juliusvenier.github.io/angarium/).
+Die Quellcode-Dokumentation und die Schnittstellen-Dokumentation finden Sie auf dieser [Seite](https://juliusvenier.github.io/angarium/).
