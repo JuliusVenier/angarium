@@ -32,8 +32,19 @@ export async function authenticateUser() {
         });
 }
 
+export function logoutUser() {
+    document.cookie = `quarkus-credential=; Max-Age=0;path=/`;
+    reloadSite(1000);
+}
+
 export function returnToIndex() {
     let link = document.createElement("a");
     link.href = ".";
     link.click();
+}
+
+export function reloadSite(delay) {
+    setTimeout(() => {
+        returnToIndex();
+    }, delay);
 }

@@ -45,7 +45,7 @@
 </script>
 {#if $isAuthenticated === false}
     <div class="dropdown dropdown-end dropdown-hover">
-        <div id="login-button" class="size-12 bg-accent-content border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
+        <div id="login-button" class="size-12 border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
              tabindex="0" role="button" bind:this={avatar}
         >
             <div class="size-4 rounded-full bg-accent"></div>
