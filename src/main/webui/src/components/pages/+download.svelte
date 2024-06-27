@@ -40,6 +40,7 @@
             return;
         }
 
+        validID = false;
         fetch("api/meta-data/" + id, {
             method: "GET"
         })

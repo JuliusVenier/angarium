@@ -42,8 +42,8 @@
 </script>
 {#if $isAuthenticated === false}
     <div class="dropdown dropdown-end dropdown-hover">
-        <div class="size-12 border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
-             role="button" bind:this={avatar}
+        <div id="login-button" class="size-12 border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
+             tabindex="0" role="button" bind:this={avatar}
              class:user-avatar-animation={useHoverEvent} on:mouseover|once={avatar_hover_event}
         >
             <div class="size-4 rounded-full bg-accent"></div>
@@ -56,8 +56,8 @@
     </div>
 {:else}
     <div class="dropdown dropdown-end dropdown-hover">
-        <div class="size-12 bg-accent flex flex-col justify-center items-center rounded-full user-avatar"
-             role="button" bind:this={avatar}
+        <div id="login-button" class="size-12 bg-accent flex flex-col justify-center items-center rounded-full user-avatar"
+             tabindex="0" role="button" bind:this={avatar}
              class:user-avatar-animation={useHoverEvent} on:mouseover|once={avatar_hover_event}
         >
             <div class="size-4 rounded-full bg-accent-content"></div>

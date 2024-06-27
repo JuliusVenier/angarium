@@ -30,7 +30,7 @@
 <style>
     dialog {
         width: max(40vw, 400px);
-        height: max(50vh, 200px);
+        height: 440px;
         @apply rounded-lg;
         @apply border-2;
         padding: 0;

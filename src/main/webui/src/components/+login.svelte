@@ -2,6 +2,11 @@
     import {returnToIndex, reloadSite} from "$lib/user.js";
     import {createEventDispatcher, onMount} from "svelte";
 
+    // Icon imports ---------------------------------------
+    import {Icon} from 'svelte-icons-pack';
+    import {SlClose} from "svelte-icons-pack/sl";
+    // ----------------------------------------------------
+
     let window;
 
     onMount(() => {
@@ -33,15 +38,16 @@
         .then((response) => {
             if (response.status === 200) {
                 // Authentication was successful
+                isLoading = true;
                 console.log("Authentication successful");
                 loadingMessage = "Anmeldung erfolgreich";
-                isLoading = true;
                 reloadSite();
             } else {
                 // Authentication failed
-                console.error("Invalid credentials");
                 isLoading = false;
+                console.error("Invalid credentials");
                 errorMessage = "Username oder Passwort ist falsch";
+
             }
         })
         .catch((error) => {
@@ -65,7 +71,8 @@
             <input type="password" placeholder="Passwort" class="input input-bordered w-full max-w-xs min-w-60" bind:value={password} on:input={inputChanged}/>
             <button class="btn btn-outline btn-accent" on:click={login}>Einloggen</button>
             {#if errorMessage !== null}
-                <div class="alert alert-error w-1/2">
+                <div class="alert alert-error w-fit">
+                    <Icon src={SlClose} size="32" slot="icon"/>
                     <span>{errorMessage}</span>
                 </div>
             {/if}
