@@ -3,6 +3,7 @@
     import { hashFile, convertArrayBufferToHex} from "$lib/cryptography.js";
     import { createMessage, encrypt } from "openpgp";
     import { isAuthenticated, user,  isDev } from "$lib/user.js";
+    import { pushPopup, popupColor } from "$lib/popup.js";
 
     import { Icon } from 'svelte-icons-pack';
     import { AiOutlineUp } from "svelte-icons-pack/ai";
@@ -118,7 +119,7 @@
 
     async function uploadFile() {
         if(checkInputs()) {
-            console.log("params missing");
+            pushPopup("Nicht alle benötigten Felder wurden angegeben!", popupColor.error, 2500);
             return;
         }
 
@@ -129,29 +130,34 @@
         try {
             hash = await hashFile(file);
             hash = convertArrayBufferToHex(hash);
-        } catch(e) {}
-        //console.log("hash: ", hash);
+        }
+        catch(ex) {
+            console.error(ex);
+            uploadSuccess = false;
+        }
 
         if (usePassword) {
-            //console.log("file", file);
-            let buffer = await file.arrayBuffer();
-            let fileData = new Uint8Array(buffer);
-            //console.log("source array", fileData);
+            try {
+                let buffer = await file.arrayBuffer();
+                let fileData = new Uint8Array(buffer);
 
-            const message = await createMessage({binary: fileData});
-            //console.log("message", message);
+                const message = await createMessage({binary: fileData});
 
-            const encrypted = await encrypt({
-                message,
-                passwords: [password],
-                format: 'binary'
-            });
-            //console.log("encrypted array", encrypted);
-            file = new File([encrypted], fileName + fileExtension, {type: 'application/octet-stream'});
+                const encrypted = await encrypt({
+                    message,
+                    passwords: [password],
+                    format: 'binary'
+                });
+                file = new File([encrypted], fileName + fileExtension, {type: 'application/octet-stream'});
+            }
+            catch(ex) {
+                console.error(ex);
+                uploadSuccess = false;
+            }
         }
 
         if (uploadSuccess === false) {
-            alert("not successful");
+            pushPopup("Beim hochladen der Datei ist ein Fehler aufgetreten!", popupColor.error);
             return;
         }
 
@@ -171,10 +177,12 @@
                 console.log("api/upload/" + fileName, response.status, response.statusText);
                 if (response.status === 200) {
                     await uploadSuccessful(response);
+                    pushPopup("Die Datei wurde erfolgreich hochgeladen.", popupColor.success, 2500);
                 }
             })
             .catch((ex) => {
                 console.error(ex);
+                pushPopup("Beim hochladen der Datei ist ein Fehler aufgetreten!", popupColor.error);
             });
     }
 

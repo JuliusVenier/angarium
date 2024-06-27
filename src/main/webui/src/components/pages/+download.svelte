@@ -24,16 +24,22 @@
 
     onMount(checkFileID);
 
+    function resetVariables() {
+        validID = undefined;
+        isEncrypted = false;
+        maxDownloadsReached = false;
+        canDownload = false;
+        password = undefined;
+        filename = undefined;
+        fileHash = undefined;
+    }
+
     function checkFileID() {
+        resetVariables();
         if (id === null || id === undefined || id.length === 0) {
-            validID = undefined;
-            filename = undefined;
             return;
         }
 
-        validID = false;
-        filename = undefined;
-        canDownload = false;
         fetch("api/meta-data/" + id, {
             method: "GET"
         })
@@ -78,7 +84,6 @@
                 if (isEncrypted) {
                     let buffer = await file.arrayBuffer();
                     let fileData = new Uint8Array(buffer);
-                    //console.log(fileData);
                     const message = await readMessage({
                         binaryMessage: fileData
                     });
@@ -86,10 +91,9 @@
                     try {
                         const {data: decrypted} = await decrypt({
                             message: message,
-                            passwords: [password], // decrypt with password
-                            format: 'binary' // output as Uint8Array
+                            passwords: [password],
+                            format: 'binary'
                         });
-                        //console.log("decrypted array", decrypted);
 
                         file = new File([decrypted], filename, {type: 'application/octet-stream'});
                     }
@@ -106,6 +110,9 @@
                     pushPopup("Die Datei wurde erfolgreich heruntergeladen.", popupColor.success);
                     successfulDownload = true;
                 }
+                else {
+                    throw new Error("wrong Hash");
+                }
             })
             .catch(ex => {
                 console.error(ex);
@@ -113,9 +120,9 @@
             });
 
         if (successfulDownload) {
-            setTimeout(() => {
+            setTimeout(async () => {
                 id = null;
-                checkFileID();
+                await checkFileID();
                 checkPasswordInput();
                 successfulDownload = false;
             }, 1000)
