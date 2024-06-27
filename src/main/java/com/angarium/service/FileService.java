@@ -133,6 +133,8 @@ public class FileService {
         }
     }
 
+
+    @Transactional
     public void deleteMyFiles(UUID fileID) throws IOException {
         FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(fileID);
 

@@ -61,7 +61,7 @@ public class MetaDataResource {
     @DELETE
     @Path("/me/{fileId}")
     @RunOnVirtualThread
-    @RolesAllowed("admin")
+    @RolesAllowed("user")
     @Operation(summary = "Löscht eine Datei des aktuellen Benutzers",
             description = "Diese Methode löscht eine Datei des aktuell angemeldeten Benutzers basierend auf der angegebenen ID.")
     public void deleteFiles(String fileId) throws IOException {
