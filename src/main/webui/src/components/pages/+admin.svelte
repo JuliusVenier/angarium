@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>angarium - Benutzerverwaltung</title>
+</svelte:head>
 <script>
     import {isDev, user} from "$lib/user.js";
     import {pushPopup, popupColor} from "$lib/popup.js";
@@ -184,6 +187,7 @@
             data={userList}
             field="username"
             let:item={row}
+            searchPlaceholder="Benutzername"
     >
         <header class="header" slot="header">
             <span class="id">ID</span>
@@ -260,6 +264,12 @@
         @apply border-2;
         @apply border-solid;
         @apply border-white;
+    }
+
+    @media only screen and (max-width: 700px) {
+        .row {
+            @apply gap-2;
+        }
     }
 
     .row:hover:not(header) {

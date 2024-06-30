@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>angarium - Benutzerprofil</title>
+</svelte:head>
 <script>
     import { isAuthenticated, user, isDev, user_roles } from "$lib/user.js";
     import {pushPopup, popupColor} from "$lib/popup.js";

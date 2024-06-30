@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>angarium - Meine Dateien</title>
+</svelte:head>
 <script>
     import {onMount} from "svelte";
     import {isDev} from "$lib/user.js";
@@ -58,8 +61,9 @@
         })
             .then((response) => {
                 console.log("api/meta-data/me/" + id + " [DELETE]", response.status, response.statusText);
-                if (response.status === 200) {
+                if (response.status === 204) {
                     pushPopup("Datei wurde erfolgreich gelöscht.", popupColor.success, 2500);
+                    window.location.reload();
                 } else {
                     throw new Error("Unexpected Response: " + response.status + " (" + response.statusText + ")");
                 }
@@ -91,6 +95,7 @@
             data={fileList}
             field="name"
             let:item={row}
+            searchPlaceholder="Name"
     >
         <colgroup slot="colgroup">
             <col width="auto"/>
@@ -130,10 +135,16 @@
                 </div>
             </td>
         </tr>
-        <tr id="rowID_{row.id}" class="row">
+        <tr id="rowID_{row.id}" class="row tablerow-normal">
             <td class="filename">{row.name}</td>
-            <td>{new Date(row.creationDate).toLocaleDateString("de-DE", dateOptions)}</td>
-            <td>{new Date(row.deletionDate).toLocaleDateString("de-DE", dateOptions)}</td>
+            <td class="tablecells-normal">{new Date(row.creationDate).toLocaleDateString("de-DE", dateOptions)}</td>
+            <td class="tablecells-normal">{new Date(row.deletionDate).toLocaleDateString("de-DE", dateOptions)}</td>
+            <td class="tablecells-mobile">
+                <div class="flex flex-col justify-center">
+                    {new Date(row.creationDate).toLocaleDateString("de-DE", dateOptions)}
+                    {new Date(row.deletionDate).toLocaleDateString("de-DE", dateOptions)}
+                </div>
+            </td>
             <td>{row.currentDownloads} / {row.maxDownloads}</td>
             <td>
                 <div class="tooltip tooltip-bottom" class:invisible={!row.encrypted} data-tip="Passwort geschützt">
@@ -150,12 +161,45 @@
             </td>
             <td>
                 <button class="btn btn-outline btn-error p-2 min-h-0 h-fit tooltip tooltip-bottom tooltip-error"
-                        data-tip="Datei löschen" on:click={() => {openConfirm(row)}}
+                        data-tip="Datei löschen" on:click={() => {openConfirm(row.id)}}
                 >
                     <Icon src={TrOutlineTrashX} size="32" />
                 </button>
             </td>
         </tr>
+        <tr id="rowID_{row.id}" class="row tablerow-mobile">
+            <td colspan="7" class="filename text-left">{row.name}</td>
+        </tr>
+        <tr id="rowID_{row.id}_2" class="row tablerow-mobile">
+            <td>
+                <div class="flex flex-col justify-center">
+                    {new Date(row.creationDate).toLocaleDateString("de-DE", dateOptions)}
+                    {new Date(row.deletionDate).toLocaleDateString("de-DE", dateOptions)}
+                </div>
+            </td>
+            <td colspan="2">{row.currentDownloads} / {row.maxDownloads}</td>
+            <td>
+                <div class="tooltip tooltip-bottom" class:invisible={!row.encrypted} data-tip="Passwort geschützt">
+                    <Icon src={TrOutlineLock} size="32" />
+                </div>
+            </td>
+            <td></td>
+            <td>
+                <button class="btn btn-outline p-2 min-h-0 h-fit tooltip tooltip-bottom" data-tip="Download Link kopieren"
+                        on:click={() => {getDownloadLink(row)}}
+                >
+                    <Icon src={AiOutlineLink} size="32" />
+                </button>
+            </td>
+            <td>
+                <button class="btn btn-outline btn-error p-2 min-h-0 h-fit tooltip tooltip-bottom tooltip-error"
+                        data-tip="Datei löschen" on:click={() => {openConfirm(row.id)}}
+                >
+                    <Icon src={TrOutlineTrashX} size="32" />
+                </button>
+            </td>
+        </tr>
+        <tr class="h-1 border-b tablerow-mobile"></tr>
     </FilterList>
     <div class="spacer-row h-28"></div>
 </div>
@@ -178,6 +222,38 @@
         @apply z-10;
         @apply h-24;
         @apply align-bottom;
+    }
+
+    .tablerow-normal {
+        display: table-row;
+    }
+    .tablerow-mobile {
+        @apply hidden;
+    }
+    .tablecells-normal {
+        display: table-cell;
+    }
+    .tablecells-mobile {
+        @apply hidden;
+    }
+
+    @media only screen and (max-width: 700px) {
+        .header {
+            @apply top-20;
+        }
+
+        .tablerow-normal {
+            @apply hidden;
+        }
+        .tablerow-mobile {
+            display: table-row;
+        }
+        .tablecells-normal {
+            @apply hidden;
+        }
+        .tablecells-mobile {
+            display: table-cell;
+        }
     }
 
     .header > th > div {

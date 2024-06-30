@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>angarium - Datei herunterladen</title>
+</svelte:head>
 <script>
     import Label from "../shared/info/+label.svelte"
     import {onMount} from "svelte";
@@ -101,6 +104,7 @@
                     catch (ex) {
                         console.error(ex);
                         pushPopup("Das eingegebene Passwort ist Falsch!", popupColor.error);
+                        return;
                     }
                 }
 

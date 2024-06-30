@@ -1,3 +1,6 @@
+<svelte:head>
+    <title>angarium - Datei hochladen</title>
+</svelte:head>
 <script>
     import {onMount} from "svelte";
     import { hashFile, convertArrayBufferToHex} from "$lib/cryptography.js";
