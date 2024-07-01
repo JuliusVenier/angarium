@@ -274,7 +274,7 @@
 
 </style>
 {#if $isDev}
-    <div id="dev-tools" class="fixed right-4 top-20 flex flex-col gap-2">
+    <div id="dev-tools" class="fixed right-4 top-20 flex flex-col gap-2 z-20">
         <div class="flex flex-row flex-wrap items-center justify-end gap-2">
             <button class="btn w-20" on:click={fetchFileList}>fetchRows</button>
         </div>

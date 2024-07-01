@@ -164,7 +164,7 @@
                    bind:value={password} on:input={checkPasswordInput} disabled={successfulDownload}/>
         {/if}
         <button class="btn btn-outline btn-accent" disabled={!canDownload || successfulDownload} on:click={downloadClick}>Datei herunterladen</button>
-        <div class="flex flex-row items-center gap-4" class:hidden={filename === undefined && validID === undefined}>
+        <div class="flex flex-wrap flex-row items-center gap-4" class:hidden={filename === undefined && validID === undefined}>
             {#if filename !== undefined}
                 <span>{filename}</span>
             {/if}
