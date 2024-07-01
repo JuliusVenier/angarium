@@ -15,13 +15,16 @@ export default {
       {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
-          "primary": "#00afff",
-          "primary-content": "#ffffff",
           "accent": "#4a00ff",
           "accent-content": "#ffffff",
-        },
-      },
-      "dark"
+          "--suc": "100% 0 0",
+          "success-content": "#ffffff",
+          "--wac": "100% 0 0",
+          "warning-content": "#ffffff",
+          "--erc": "100% 0 0",
+          "error-content": "#ffffff",
+        }
+      }
     ],
   },
 }

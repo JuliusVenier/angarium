@@ -25,14 +25,11 @@
     const dispatch = createEventDispatcher();
 
     let avatar;
-    onMount(() => {
-        const avatar_hover_event = (event) => {
-            console.log("addclass");
-            avatar.classList.add('user-avatar-animation');
-            avatar.removeEventListener("hover");
-        }
-        avatar.addEventListener('hover', avatar_hover_event);
-    });
+
+    let useHoverEvent = false;
+    function avatar_hover_event() {
+        useHoverEvent = true;
+    }
 
     function openLogin() {
         dispatch("openLogin");
@@ -45,8 +42,9 @@
 </script>
 {#if $isAuthenticated === false}
     <div class="dropdown dropdown-end dropdown-hover">
-        <div id="login-button" class="size-12 bg-accent-content border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
+        <div id="login-button" class="size-12 border-2 border-accent flex flex-col justify-center items-center rounded-full user-avatar"
              tabindex="0" role="button" bind:this={avatar}
+             class:user-avatar-animation={useHoverEvent} on:mouseover|once={avatar_hover_event}
         >
             <div class="size-4 rounded-full bg-accent"></div>
             <div class="h-1"></div>
@@ -60,6 +58,7 @@
     <div class="dropdown dropdown-end dropdown-hover">
         <div id="login-button" class="size-12 bg-accent flex flex-col justify-center items-center rounded-full user-avatar"
              tabindex="0" role="button" bind:this={avatar}
+             class:user-avatar-animation={useHoverEvent} on:mouseover|once={avatar_hover_event}
         >
             <div class="size-4 rounded-full bg-accent-content"></div>
             <div class="h-1"></div>

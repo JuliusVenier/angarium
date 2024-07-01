@@ -30,5 +30,7 @@
 {:else if page === pages.admin}
     <Admin/>
 {:else if page === pages.download}
-    <Download id={null}/>
+    <div class="flex justify-center overflow-y-auto h-full py-14">
+        <Download id={null}/>
+    </div>
 {/if}

@@ -1,37 +1,54 @@
 <script>
     export let showModal;
+    export let showClose = true;
 
-    let dialog;
+    export let dialog;
+
+    import {Icon} from 'svelte-icons-pack';
+    import { CgClose } from "svelte-icons-pack/cg";
 
     $: if (dialog && showModal) dialog.showModal();
+
 </script>
 <dialog
         bind:this={dialog}
-        on:close={() => (showModal = false)}
+        on:close={() => {showModal = false}}
         on:click|self={() => dialog.close()}
 >
     <div on:click|stopPropagation>
-        <slot name="header" />
-        <hr />
-        <slot />
-        <hr />
-        <button autofocus on:click={() => dialog.close()}>close modal</button>
+        <slot name="header" class="absolute top-2 left-2" />
+        {#if showClose}
+            <button class="absolute top-2 right-2" autofocus on:click={() => dialog.close()}><Icon src={CgClose} size="32" /></button>
+        {/if}
+        <div>
+            <slot />
+        </div>
         <slot name="buttons"/>
     </div>
 </dialog>
 
 <style>
     dialog {
-        max-width: 32em;
-        border-radius: 0.2em;
-        border: none;
+        width: max(40vw, 400px);
+        height: 440px;
+        @apply rounded-lg;
+        @apply border-2;
         padding: 0;
+        background-image: repeating-linear-gradient(45deg, white 0px, white 20px, #f0f0f0 21px, white 22px);
+
     }
     dialog::backdrop {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(256, 256, 256, 0.7);
     }
     dialog > div {
-        padding: 1em;
+        @apply p-10;
+        @apply w-full;
+        @apply h-full;
+        @apply flex;
+        @apply flex-col;
+        @apply gap-4;
+        @apply justify-center;
+        @apply items-center;
     }
     dialog[open] {
         animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);

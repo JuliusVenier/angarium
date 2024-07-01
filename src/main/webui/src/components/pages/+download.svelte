@@ -1,15 +1,19 @@
+<svelte:head>
+    <title>angarium - Datei herunterladen</title>
+</svelte:head>
 <script>
     import Label from "../shared/info/+label.svelte"
+    import {onMount} from "svelte";
+    import {isDev} from "$lib/user.js";
+    import {convertArrayBufferToHex, hashFile} from "$lib/cryptography.js";
+    import {decrypt, readMessage} from "openpgp";
+    import {pushPopup, popupColor} from "$lib/popup.js";
 
     // Icon imports ---------------------------------------
     import {Icon} from 'svelte-icons-pack';
     import {SlCheck, SlClose} from "svelte-icons-pack/sl";
     import {RiSystemErrorWarningLine} from "svelte-icons-pack/ri";
     //-----------------------------------------------------
-    import {onMount} from "svelte";
-    import {isDev} from "$lib/user.js";
-    import {convertArrayBufferToHex, hashFile} from "$lib/cryptography.js";
-    import {decrypt, readMessage} from "openpgp";
 
     export let id;
     let validID = undefined;
@@ -23,15 +27,23 @@
 
     onMount(checkFileID);
 
+    function resetVariables() {
+        validID = undefined;
+        isEncrypted = false;
+        maxDownloadsReached = false;
+        canDownload = false;
+        password = undefined;
+        filename = undefined;
+        fileHash = undefined;
+    }
+
     function checkFileID() {
+        resetVariables();
         if (id === null || id === undefined || id.length === 0) {
-            validID = undefined;
             return;
         }
 
         validID = false;
-        filename = undefined;
-        canDownload = false;
         fetch("api/meta-data/" + id, {
             method: "GET"
         })
@@ -59,12 +71,13 @@
         canDownload = isEncrypted && password !== null && password !== undefined && password.length > 0;
     }
 
+    let successfulDownload = false;
     async function downloadClick() {
         await fetch("api/download/" + id, {
             method: "GET"
         })
             .then(async response => {
-                console.log("api/download/" + id, response.status);
+                console.log("api/download/" + id + " [GET]", response.status, response.statusText);
                 if (response.status !== 200) {
                     throw new Error("Unexpected response");
                 }
@@ -75,7 +88,6 @@
                 if (isEncrypted) {
                     let buffer = await file.arrayBuffer();
                     let fileData = new Uint8Array(buffer);
-                    //console.log(fileData);
                     const message = await readMessage({
                         binaryMessage: fileData
                     });
@@ -83,17 +95,16 @@
                     try {
                         const {data: decrypted} = await decrypt({
                             message: message,
-                            passwords: [password], // decrypt with password
-                            format: 'binary' // output as Uint8Array
+                            passwords: [password],
+                            format: 'binary'
                         });
-                        //console.log("decrypted array", decrypted);
 
                         file = new File([decrypted], filename, {type: 'application/octet-stream'});
                     }
                     catch (ex) {
                         console.error(ex);
-                        // TODO Alert User
-                        alert("wrong password");
+                        pushPopup("Das eingegebene Passwort ist Falsch!", popupColor.error);
+                        return;
                     }
                 }
 
@@ -101,14 +112,30 @@
                 if (checkHash(fileHash, hash)) {
                     let url = URL.createObjectURL(file);
                     downloadFile(url, file.name);
+                    pushPopup("Die Datei wurde erfolgreich heruntergeladen.", popupColor.success);
+                    successfulDownload = true;
+                }
+                else {
+                    throw new Error("wrong Hash");
                 }
             })
             .catch(ex => {
                 console.error(ex);
+                pushPopup("Beim herunterladen der Datei ist ein Fehler aufgetreten!", popupColor.error);
             });
 
-        checkFileID();
-        checkPasswordInput();
+        if (successfulDownload) {
+            setTimeout(async () => {
+                id = null;
+                await checkFileID();
+                checkPasswordInput();
+                successfulDownload = false;
+            }, 1000)
+        }
+        else {
+            checkFileID();
+            checkPasswordInput();
+        }
     }
 
     function checkHash(hashBeforeEncryption, currentHash) {
@@ -126,20 +153,18 @@
         link.click();
     }
 </script>
-<div class="flex flex-col h-full w-full items-center justify-center">
+<div class="flex flex-col h-fit my-auto w-full items-center">
     <div class="flex flex-col w-1/5 gap-4 min-w-80">
         <div class="flex flex-row gap-4 items-center w-full">
-            <input type="text" placeholder="Download ID" class="input input-bordered w-full" bind:value={id} on:input={checkFileID}/>
+            <input type="text" placeholder="Download ID" class="input input-bordered w-full"
+                   bind:value={id} on:input={checkFileID} disabled={successfulDownload}/>
         </div>
         {#if isEncrypted && !maxDownloadsReached}
-            <input type="password" placeholder="Passwort" class="input input-bordered w-full" bind:value={password} on:input={checkPasswordInput}/>
+            <input type="password" placeholder="Passwort" class="input input-bordered w-full"
+                   bind:value={password} on:input={checkPasswordInput} disabled={successfulDownload}/>
         {/if}
-        {#if canDownload}
-            <button class="btn btn-outline btn-accent" on:click={downloadClick}>Datei herunterladen</button>
-        {:else}
-            <button class="btn btn-outline btn-disabled">Datei herunterladen</button>
-        {/if}
-        <div class="flex flex-row items-center gap-4">
+        <button class="btn btn-outline btn-accent" disabled={!canDownload || successfulDownload} on:click={downloadClick}>Datei herunterladen</button>
+        <div class="flex flex-wrap flex-row items-center gap-4" class:hidden={filename === undefined && validID === undefined}>
             {#if filename !== undefined}
                 <span>{filename}</span>
             {/if}
