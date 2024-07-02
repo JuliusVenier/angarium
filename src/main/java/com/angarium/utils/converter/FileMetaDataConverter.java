@@ -10,6 +10,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.LocalDate;
 
+/**
+ * Eine Konvertierer-Klasse für die File-Meta-Daten
+ */
 @ApplicationScoped
 @RequiredArgsConstructor
 public class FileMetaDataConverter {

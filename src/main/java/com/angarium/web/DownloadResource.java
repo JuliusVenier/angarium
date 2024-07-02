@@ -12,6 +12,9 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 
 import java.io.IOException;
 
+/**
+ * Diese Klasse stellt einen Endpunkt zum Herunterladen von Dateien bereit.
+ */
 @Path("/download")
 @JBossLog
 @RequiredArgsConstructor

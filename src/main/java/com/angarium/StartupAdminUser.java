@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.jbosslog.JBossLog;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+/**
+ * Initialisiert den Admin-Benutzer beim Systemstart.
+ */
 @Singleton
 @RequiredArgsConstructor
 @JBossLog
