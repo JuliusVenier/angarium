@@ -134,6 +134,11 @@ public class FileService {
     }
 
 
+    /**
+     * Löscht die Datei eines Benutzers.
+     *
+     * @throws IOException Wenn ein Fehler beim Löschen der Datei auftritt.
+     */
     @Transactional
     public void deleteMyFiles(UUID fileID) throws IOException {
         FileMetaDataEntity fileMetaDataEntity = fileMetaDataRepository.findFileMetaDataByUUID(fileID);
@@ -164,6 +169,12 @@ public class FileService {
         return fileMetaDataRepository.findFileMetaDataByUUID(UUID.fromString(fileId));
     }
 
+    /**
+     * Findet die Metadaten einer Datei anhand ihrer ID, und konvertiert sie in ein Model.
+     *
+     * @param fileId Die ID der Datei.
+     * @return Die Metadaten der Datei.
+     */
     public FileMetaDataModel getFileMetaData(String fileId) {
         return fileMetaDataConverter.toFileMetaDataModel(findFileMetaData(fileId));
     }

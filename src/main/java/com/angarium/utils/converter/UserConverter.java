@@ -7,6 +7,9 @@ import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.NonNull;
 
+/**
+ * Eine Konvertierer-Klasse für die Benutzer
+ */
 @ApplicationScoped
 public class UserConverter {
 

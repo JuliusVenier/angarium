@@ -8,6 +8,9 @@ import lombok.extern.jbosslog.JBossLog;
 
 import java.io.IOException;
 
+/**
+ * Beinhaltet alle Cron Jobs, die für das Löschen zuständig ist
+ */
 @JBossLog
 @RequiredArgsConstructor
 @ApplicationScoped
